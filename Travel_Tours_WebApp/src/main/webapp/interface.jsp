@@ -10,7 +10,6 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-        <link rel="stylesheet" href="css/froala_style.css">
         <link rel="stylesheet" href="css/destination.css">
     </head>
     <body>
@@ -21,7 +20,7 @@
                 <div class="c-header__left">
                     <div class="c-header__logo">
                         <a href="https://forevervacation.com"><img class="pc-only" src="images/menu/1.png" alt="logo" loading="lazy">
-                            <img class="sp-only" src="images/menu/logo_header_mobile_new.svg" alt="logo" loading="lazy">
+                            <img class="sp-only" src="images/menu/4.png" alt="logo" loading="lazy">
                         </a>
                     </div>
                     <div class="c-header__search input-search 1">
