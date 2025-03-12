@@ -19,12 +19,12 @@
             <header class="c-header type_breadcrumb  " id="header">
                 <div class="c-header__left">
                     <div class="c-header__logo">
-                        <a href="https://forevervacation.com"><img class="pc-only" src="images/menu/1.png" alt="logo" loading="lazy">
+                        <a ><img class="pc-only" src="images/menu/1.png" alt="logo" loading="lazy">
                             <img class="sp-only" src="images/menu/4.png" alt="logo" loading="lazy">
                         </a>
                     </div>
                     <div class="c-header__search input-search 1">
-                        <form method="GET" action="https://forevervacation.com/search/result">
+                        <form method="GET" action="">
                             <div class="c-header__search__autocomplete autocomplete">
                                 <input id="search-bar" type="text" name="term" placeholder="Where are you going?">
                             </div>
@@ -41,13 +41,13 @@
                         <nav class="navigation">
                             <div class="navigation__head">
                                 <div class="navigation__home">
-                                    <a href="https://forevervacation.com">HOME</a>
+                                    <a >HOME</a>
                                 </div>
                                 <div btn-close-menu="" class="navigation__closebtn">
                                     <img src="images/menu/icon_close_black.svg" alt="close-icon" loading="lazy">
                                 </div>
                             </div>
-                            
+
                             <ul class="navigation__menumain">
                                 <li class="navigation__menumain__item">
                                     <a class="navigation__menumain__item__destinations" data-btn-drop-down=""><span
@@ -55,16 +55,16 @@
                                         Destinations
                                         <img src="images/menu/arrow-right.svg" alt="arrow-right" loading="lazy">
                                     </a>
-                                    
+
                                 </li>
                                 <li class="navigation__menumain__item">
                                     <a>Why We’re Different</a>
                                 </li>
                                 <li class="navigation__menumain__item">
-                                    <a class="" href="https://forevervacation.com/about-us">About Us</a>
+                                    <a class="" >About Us</a>
                                 </li>
                                 <li class="navigation__menumain__item">
-                                    <a class="" href="https://forevervacation.com/about-us">Support</a>
+                                    <a class="" >Support</a>
                                 </li>
                             </ul>
                         </nav>
@@ -86,11 +86,11 @@
                                     </div>
                                     <img src="images/menu/arrow-down-white.svg" alt="Expand menu" class="c-header__user-arrow">
                                 </div>
-                                
+
                             </div>
                         </div>
                         <!-- if user not login show these -->
-                        <a href="https://wa.me/16174042125" target="_blank" class="c-header__contact">
+                        <a href="https://zalo.me/g/wgyzda401" target="_blank" class="c-header__contact">
                             <p>Got a question? Text us on Zalo</p>
                             <p>
                                 <img src="images/menu/whatsapp.svg" alt="whatsapp" loading="lazy">0384 123 254
@@ -98,10 +98,10 @@
                         </a>
                     </div>
                 </div>
-                
+
             </header>
             <main class="destination">
-                
+
                 <section class="tour_in_KV">
                     <picture class="tour_in_KV__bg lazyload">
                         <source type="image/png" media="(min-width: 769px)" srcset="images/menu/3.jpg">
@@ -152,7 +152,7 @@
                         </div>
                     </div>
                 </section>
-                
+
         </div>
     </body>
 </html>
