@@ -9,8 +9,9 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-        <link rel="stylesheet" href="css/menu.css">
+        <title>Travel Tour</title>
+        <link rel="stylesheet" href="css/home.css">
+
     </head>
     <body>
         <div class="wrapper" onclick="void(0);">
@@ -19,8 +20,8 @@
             <header class="c-header type_breadcrumb  " id="header">
                 <div class="c-header__left">
                     <div class="c-header__logo">
-                        <a ><img class="pc-only" src="images/menu/1.png" alt="logo" loading="lazy">
-                            <img class="sp-only" src="images/menu/4.png" alt="logo" loading="lazy">
+                        <a ><img class="pc-only" src="images/home/1.png" alt="logo" loading="lazy">
+                            <img class="sp-only" src="images/home/4.png" alt="logo" loading="lazy">
                         </a>
                     </div>
                     <div class="c-header__search input-search 1">
@@ -44,7 +45,7 @@
                                     <a >HOME</a>
                                 </div>
                                 <div btn-close-menu="" class="navigation__closebtn">
-                                    <img src="images/menu/icon_close_black.svg" alt="close-icon" loading="lazy">
+                                    <img src="images/home/icon_close_black.svg" alt="close-icon" loading="lazy">
                                 </div>
                             </div>
 
@@ -53,7 +54,7 @@
                                     <a class="navigation__menumain__item__destinations" data-btn-drop-down=""><span
                                             class="pc-only">Our</span>
                                         Destinations
-                                        <img src="images/menu/arrow-right.svg" alt="arrow-right" loading="lazy">
+                                        <img src="images/home/arrow-right.svg" alt="arrow-right" loading="lazy">
                                     </a>
 
                                 </li>
@@ -77,23 +78,24 @@
                                     <div class="c-header__user-icon">
                                         <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <rect width="26" height="26" rx="13" fill="white"></rect>
-                                        <circle cx="13.0007" cy="11.6667" r="3.66667" stroke="black" stroke-width="2"
-                                                stroke-linecap="round"></circle>
-                                        <path
-                                            d="M20 19.4451C18.3386 17.5455 15.8197 16.334 13 16.334C10.1803 16.334 7.66143 17.5455 6 19.4451"
-                                            stroke="black" stroke-width="2" stroke-linecap="round"></path>
+                                        <circle cx="13.0007" cy="11.6667" r="3.66667" stroke="black" stroke-width="2" stroke-linecap="round"></circle>
+                                        <path d="M20 19.4451C18.3386 17.5455 15.8197 16.334 13 16.334C10.1803 16.334 7.66143 17.5455 6 19.4451" stroke="black" stroke-width="2" stroke-linecap="round"></path>
                                         </svg>
                                     </div>
-                                    <img src="images/menu/arrow-down-white.svg" alt="Expand menu" class="c-header__user-arrow">
+                                    <img src="images/home/arrow-down-white.svg" alt="Expand menu" class="c-header__user-arrow">
                                 </div>
-
+                                <!-- Dropdown Menu -->
+                                <div class="c-header__dropdown">
+                                    <a href="login.jsp" class="c-header__dropdown-item">Login</a>
+                                    <a href="signup" class="c-header__dropdown-item">Sign Up</a>
+                                </div>
                             </div>
                         </div>
                         <!-- if user not login show these -->
                         <a href="https://zalo.me/g/wgyzda401" target="_blank" class="c-header__contact">
                             <p>Got a question? Text us on Zalo</p>
                             <p>
-                                <img src="images/menu/whatsapp.svg" alt="whatsapp" loading="lazy">0384 123 254
+                                <img src="images/home/whatsapp.svg" alt="whatsapp" loading="lazy">0384 123 254
                             </p>
                         </a>
                     </div>
@@ -104,46 +106,46 @@
 
                 <section class="tour_in_KV">
                     <picture class="tour_in_KV__bg lazyload">
-                        <source type="image/png" media="(min-width: 769px)" srcset="images/menu/3.jpg">
-                        <source type="image/png" media="(max-width: 768px)" srcset="images/menu/3.jpg">
-                        <img src="images/menu/bali.webp" alt="banner">
+                        <source type="image/png" media="(min-width: 769px)" srcset="images/home/3.jpg">
+                        <source type="image/png" media="(max-width: 768px)" srcset="images/home/3.jpg">
+                        <img src="images/home/bali.webp" alt="banner">
                     </picture>
                     <div class="tour_in_KV__brush">
-                        <img src="images/menu/brush-stroke.svg" alt="brush-stroke">
+                        <img src="images/home/brush-stroke.svg" alt="brush-stroke">
                     </div>
                     <div class="tour_in_KV__main">
                         <div class="c-container">
                             <h1 class="c-title04">Tours around Vietnam</h1>
                             <p class="c-text03">Here are all the Tours we are currently offering across Vietnam</p>
-                            <a href="#Tours" class="c-btn01">See All Our Tours<img src="images/menu/Icon-Plane.svg" alt="ic-plane"></a>
+                            <a href="#Tours" class="c-btn01">See All Our Tours<img src="images/home/Icon-Plane.svg" alt="ic-plane"></a>
                             <p class="c-text01">Over 20,000 Reviews</p>
                             <div class="tour_in_KV__gr">
                                 <dl>
                                     <dt>
-                                        <img src="images/menu/2.png" alt="tripadvisor">
+                                        <img src="images/home/2.png" alt="tripadvisor">
                                     </dt>
                                     <dd>
                                         <div class="tour_in_KV__gr__star">
-                                            <img src="images/menu/icon-rounded.svg" alt="rounded">
-                                            <img src="images/menu/icon-rounded.svg" alt="rounded">
-                                            <img src="images/menu/icon-rounded.svg" alt="rounded">
-                                            <img src="images/menu/icon-rounded.svg" alt="rounded">
-                                            <img src="images/menu/icon-rounded.svg" alt="rounded">
+                                            <img src="images/home/icon-rounded.svg" alt="rounded">
+                                            <img src="images/home/icon-rounded.svg" alt="rounded">
+                                            <img src="images/home/icon-rounded.svg" alt="rounded">
+                                            <img src="images/home/icon-rounded.svg" alt="rounded">
+                                            <img src="images/home/icon-rounded.svg" alt="rounded">
                                         </div>
                                         <p>As recommended by 99% of users on Facebook</p>
                                     </dd>
                                 </dl>
                                 <dl>
                                     <dt>
-                                        <img src="images/menu/icon-google.svg" alt="google">
+                                        <img src="images/home/icon-google.svg" alt="google">
                                     </dt>
                                     <dd>
                                         <div class="tour_in_KV__gr__star">
-                                            <img src="images/menu/icon-star.svg" alt="star">
-                                            <img src="images/menu/icon-star.svg" alt="star">
-                                            <img src="images/menu/icon-star.svg" alt="star">
-                                            <img src="images/menu/icon-star.svg" alt="star">
-                                            <img src="images/menu/icon-star.svg" alt="star">
+                                            <img src="images/home/icon-star.svg" alt="star">
+                                            <img src="images/home/icon-star.svg" alt="star">
+                                            <img src="images/home/icon-star.svg" alt="star">
+                                            <img src="images/home/icon-star.svg" alt="star">
+                                            <img src="images/home/icon-star.svg" alt="star">
                                         </div>
                                         <p>As recommended by 99% of users on Google reviews</p>
                                     </dd>
@@ -152,7 +154,24 @@
                         </div>
                     </div>
                 </section>
-
         </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const userMenu = document.querySelector(".c-header__user-menu");
+                const dropdown = document.querySelector(".c-header__dropdown");
+
+                userMenu.addEventListener("click", function (event) {
+                    event.stopPropagation();
+                    dropdown.classList.toggle("show");
+                });
+
+                document.addEventListener("click", function (event) {
+                    if (!userMenu.contains(event.target)) {
+                        dropdown.classList.remove("show");
+                    }
+                });
+            });
+        </script>
+
     </body>
 </html>
