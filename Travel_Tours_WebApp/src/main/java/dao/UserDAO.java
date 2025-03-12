@@ -102,14 +102,14 @@ public class UserDAO extends DBContext {
         return acc;
     }
 
-    public static void main(String[] args) {
-        UserDAO dao = new UserDAO();
-        User account = new User();
-        account = dao.verify("admin", "admin");
+    // public static void main(String[] args) {
+    //     UserDAO dao = new UserDAO();
+    //     User account = new User();
+    //     account = dao.verify("admin", "admin");
 
-        System.out.println(account);
+    //     System.out.println(account);
 
-//        String result = dao.hashMD5("admin");
-//        System.out.println(result);
-    }
+    //     String result = dao.hashMD5("admin");
+    //     System.out.println(result);
+    // }
 }
