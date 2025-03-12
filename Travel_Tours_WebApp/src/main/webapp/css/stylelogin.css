@@ -1,0 +1,115 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Mar 5, 2025, 4:49:23 PM
+    Author     : ngoth
+*/
+body {
+    background: url('https://img2.thuthuat123.com/uploads/2020/03/17/anh-hoang-hon-vinh-ha-long_115608289.jpg') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.login-container {
+    background: rgba(255, 255, 255, 0.9); /* Nền trắng mờ để ảnh nền vẫn hiển thị */
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-title {
+    color: #000000; /* Màu đen cho tiêu đề */
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.login-title::after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 5px;
+    background: #EFC109; /* Màu vàng nhạt cho dòng dưới tiêu đề */
+    border-radius: 5px;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #000000; /* Màu đen cho nhãn */
+}
+
+.form-control {
+    border-radius: 5px;
+    border: 2px solid #EFC109; /* Màu vàng nhạt cho viền input */
+}
+
+.form-control:focus {
+    border-color: #EFC109; /* Màu vàng nhạt khi focus */
+    box-shadow: 0 0 5px rgba(239, 193, 9, 0.5);
+}
+
+.btn-login {
+    background-color: #EFC109 !important; /* Màu vàng nhạt cho nút */
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-weight: bold;
+    width: 100%;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: #000000 !important; /* Màu đen cho text nút */
+}
+
+.btn-login:hover {
+    background-color: #D4A800 !important; /* Màu vàng nhạt đậm hơn khi hover */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    color: #000000; /* Giữ màu đen cho text khi hover */
+}
+
+.btn-login:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sign-up {
+    color: #EFC109; /* Màu vàng nhạt cho liên kết "Sign up" */
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.sign-up:hover {
+    text-decoration: underline;
+    color: #D4A800; /* Màu vàng nhạt đậm hơn khi hover */
+}
+
+/* Thêm lớp phủ mờ để làm nổi bật nội dung trên background */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3); /* Lớp phủ mờ đen với độ trong suốt 30% */
+    z-index: 1;
+}
+
+.login-container {
+    position: relative;
+    z-index: 2; /* Đảm bảo container nằm trên lớp phủ */
+}
