@@ -4,7 +4,8 @@
     <head>
         <title>Redirecting...</title>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        
+        <link rel="icon" type="image/png" href="images/favicon_io/favicon.ico">
+
         <style>
             body {
                 background: url('https://img2.thuthuat123.com/uploads/2020/03/17/anh-hoang-hon-vinh-ha-long_115608289.jpg') no-repeat center center fixed;
