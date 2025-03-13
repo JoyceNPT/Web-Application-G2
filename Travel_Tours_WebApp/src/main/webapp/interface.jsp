@@ -10,9 +10,10 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Travel Tour</title>
-        <link rel="stylesheet" href="css/home.css">
+
         <link rel="icon" type="image/png" href="images/favicon_io/favicon.ico">
-         <link rel="stylesheet" href="css/tour.css">
+        <link rel="stylesheet" href="css/home.css">
+        <link rel="stylesheet" href="css/tour.css">
     </head>
     <body>
         <div class="wrapper" onclick="void(0);">
@@ -118,9 +119,9 @@
                         <div class="c-container">
                             <h1 class="c-title04">Tours around Vietnam</h1>
                             <p class="c-text03">Here are all the Tours we are currently offering across Vietnam</p>
-                            <a href="#tourSection" class="c-btn01">
+                            <a id="seeAllToursBtn" href="#tourSection" class="c-btn01">
                                 See All Our Tours
-                                <img src="images/menu/Icon-Plane.svg" alt="ic-plane">
+                                <img src="images/home/Icon-Plane.svg" alt="ic-plane">
                             </a>
 
                             <p class="c-text01">Over 20,000 Reviews</p>
@@ -178,13 +179,13 @@
             });
         </script>
         <!-- Danh sách tour -->
-        <section id="tourSection" class="tour-list">
+        <section id="tourSection" id="tourSection" class="tour-list">
             <div class="tours-grid">
 
                 <!-- Tour 1: Đà Lạt -->
                 <div class="tour-card">
                     <div class="tour-image">
-                        <img src="images/tour/DL1.jpg" alt="Đà Lạt">
+                        <img src="images/tours/DL1.jpg" alt="Đà Lạt">
                     </div>
                     <div class="tour-info">
                         <div class="tour-title">Tour Đà Lạt - Thành Phố Ngàn Hoa</div>
@@ -200,7 +201,7 @@
                 <!-- Tour 2: Huế -->
                 <div class="tour-card">
                     <div class="tour-image">
-                        <img src="images/tour/hue1.jpg" alt="Huế">
+                        <img src="images/tours/Hue1.jpg" alt="Huế">
                     </div>
                     <div class="tour-info">
                         <div class="tour-title">Khám Phá Cố Đô Huế</div>
@@ -216,7 +217,7 @@
                 <!-- Tour 3: Vũng Tàu -->
                 <div class="tour-card">
                     <div class="tour-image">
-                        <img src="images/tour/VT1.jpg" alt="Vũng Tàu">
+                        <img src="images/tours/VT1.jpg" alt="Vũng Tàu">
                     </div>
                     <div class="tour-info">
                         <div class="tour-title">Vũng Tàu Biển Xanh Cát Trắng</div>
@@ -232,7 +233,7 @@
                 <!-- Tour 4: Hạ Long -->
                 <div class="tour-card">
                     <div class="tour-image">
-                        <img src="images/tour/hlong1.jpg" alt="Vịnh Hạ Long">
+                        <img src="images/tours/HL1.jpg" alt="Vịnh Hạ Long">
                     </div>
                     <div class="tour-info">
                         <div class="tour-title">Kỳ Quan Vịnh Hạ Long</div>
@@ -248,7 +249,7 @@
                 <!-- Tour 5: Đà Nẵng -->
                 <div class="tour-card">
                     <div class="tour-image">
-                        <img src="images/tour/DN3.jpg" alt="Đà Nẵng">
+                        <img src="images/tours/DN3.jpg" alt="Đà Nẵng">
                     </div>
                     <div class="tour-info">
                         <div class="tour-title">Đà Nẵng - Bà Nà Hills - Hội An</div>
@@ -263,6 +264,20 @@
 
             </div>
         </section>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                document.getElementById("seeAllToursBtn").addEventListener("click", function (event) {
+                    event.preventDefault();
+                    const tourSection = document.getElementById("tourSection");
+                    if (tourSection) {
+                        window.scrollTo({
+                            top: tourSection.offsetTop - 80, // Điều chỉnh khoảng cách nếu cần
+                            behavior: "smooth" // Hiệu ứng cuộn mượt
+                        });
+                    }
+                });
+            });
+        </script>
 
     </body>
 </html>
