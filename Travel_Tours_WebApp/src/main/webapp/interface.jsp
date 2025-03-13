@@ -88,7 +88,7 @@
                                 <!-- Dropdown Menu -->
                                 <div class="c-header__dropdown">
                                     <a href="login.jsp" class="c-header__dropdown-item">Login</a>
-                                    <a href="signup" class="c-header__dropdown-item">Sign Up</a>
+                                    <a href="signup.jsp" class="c-header__dropdown-item">Sign Up</a>
                                 </div>
                             </div>
                         </div>
