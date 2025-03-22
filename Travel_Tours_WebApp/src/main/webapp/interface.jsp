@@ -4,14 +4,30 @@
     Author     : Khoa
 --%>
 
-<%@page import="model.Image"%>
+<%@page import="dao.UserDAO"%>
+<%@page import="model.User"%>
 <%@page import="java.util.List"%>
 <%@page import="model.Tour"%>
 <%@page import="dao.TourDAO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
+    User loggedUser = (User) session.getAttribute("account");
+    
+    Cookie[] cookies = request.getCookies();
+    String username = null;
+
+    if (cookies != null) {
+        for (Cookie c : cookies) {
+            if (c.getName().equalsIgnoreCase("COOKIE_USERNAME")) {
+                username = c.getValue();
+            }
+        }
+    }
+
     TourDAO dao = new TourDAO();
     List<Tour> list = dao.getAll();
+
+
 %>
 
 
@@ -83,26 +99,42 @@
                         </nav>
                     </div>
                     <div class="c-header__group">
-                        <!-- if user not login show these -->
+                        <% if (loggedUser != null) {%>
+                        <!-- Nếu user đã đăng nhập -->
+                        <div class="c-header__user-menu">
+                            <div class="c-header__user-toggle" data-slide-toggle="">
+                                <div class="c-header__user-icon">
+                                    <img src="images/home/user-icon.svg" alt="User Icon">
+                                    <span><%= loggedUser.getUsername()%></span>
+                                </div>
+                                <img src="images/home/arrow-down-white.svg" alt="Expand menu" class="c-header__user-arrow">
+                            </div>
+                            <div class="c-header__dropdown">
+                                <a href="user-info.jsp" class="c-header__dropdown-item">Information</a>
+                                <a href="logout.jsp" class="c-header__dropdown-item">Logout</a>
+                            </div>
+                        </div>
+                        <% } else { %>
+                        <!-- Nếu chưa đăng nhập -->
                         <div class="c-header__user-not-login pc-only">
                             <div class="c-header__user-menu">
                                 <div class="c-header__user-toggle" data-slide-toggle="">
                                     <div class="c-header__user-icon">
-                                        <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
                                         <rect width="26" height="26" rx="13" fill="white"></rect>
-                                        <circle cx="13.0007" cy="11.6667" r="3.66667" stroke="black" stroke-width="2" stroke-linecap="round"></circle>
-                                        <path d="M20 19.4451C18.3386 17.5455 15.8197 16.334 13 16.334C10.1803 16.334 7.66143 17.5455 6 19.4451" stroke="black" stroke-width="2" stroke-linecap="round"></path>
+                                        <circle cx="13" cy="11.7" r="3.7" stroke="black" stroke-width="2"></circle>
+                                        <path d="M20 19.4C18.3 17.5 15.8 16.3 13 16.3C10.2 16.3 7.7 17.5 6 19.4" stroke="black" stroke-width="2"></path>
                                         </svg>
                                     </div>
                                     <img src="images/home/arrow-down-white.svg" alt="Expand menu" class="c-header__user-arrow">
                                 </div>
-                                <!-- Dropdown Menu -->
                                 <div class="c-header__dropdown">
                                     <a href="login.jsp" class="c-header__dropdown-item">Login</a>
                                     <a href="signup.jsp" class="c-header__dropdown-item">Sign Up</a>
                                 </div>
                             </div>
                         </div>
+                        <% } %>
                         <!-- if user not login show these -->
                         <a href="https://zalo.me/g/wgyzda401" target="_blank" class="c-header__contact">
                             <p>Got a question? Text us on Zalo</p>
@@ -191,31 +223,32 @@
         <!-- Danh sách tour -->
 
         <section id="tourSection" class="tour-list">
-    <div class="tours-grid">
-        <% for (Tour t : list) { 
-            List<Image> images = dao.getImagesByTourId(t.getId());
-            String imageUrl = "images/tours/default.jpg"; // Ảnh mặc định
-            if (images != null && !images.isEmpty()) {
-                imageUrl = images.get(0).getUrl_img(); // Lấy ảnh đầu tiên nếu có
-            }
-        %>
-        <div class="tour-card">
-            <div class="tour-image">
-                <img src="<%= imageUrl %>" alt="<%= t.getName() %>">
-            </div>
-            <div class="tour-info">
-                <div class="tour-title"><%= t.getName() %></div>
-                <div class="tour-description"><%= t.getDescrip() %></div>
-                <div class="tour-price"><%= t.getPrice() %></div>
-                <div class="tour-buttons">
-                    <a href="tour-details?id=<%= t.getId() %>" class="btn btn-details">Xem chi tiết</a>
-                    <a href="booking?id=<%= t.getId() %>" class="btn btn-booking">Đặt tour</a>
+            <div class="tours-grid">
+                <%
+                    for (Tour t : list) {
+                %>
+                <!-- Tour Card -->
+                <div class="tour-card">
+                    <div class="tour-image">
+                        <!-- Nếu có getImage() thì lấy từ database, nếu không thì tự động lấy theo ID -->
+                        <img src="images/tours/<%= t.getId()%>.jpg" alt="<%= t.getName()%>">
+
+                    </div>
+                    <div class="tour-info">
+                        <div class="tour-title"><%= t.getName()%></div>
+                        <div class="tour-description"><%= t.getDescrip()%></div>
+                        <div class="tour-price"><%= t.getPrice()%></div>
+                        <div class="tour-buttons">
+                            <a href="tour-details?id=<%= t.getId()%>" class="btn btn-details">Xem chi tiết</a>
+                            <a href="booking?id=<%= t.getId()%>" class="btn btn-booking">Đặt tour</a>
+                        </div>
+                    </div>
                 </div>
+                <%
+                    }
+                %>
             </div>
-        </div>
-        <% } %>
-    </div>
-</section>
+        </section>
 
 
 
