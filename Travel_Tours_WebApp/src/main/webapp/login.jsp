@@ -14,17 +14,24 @@
         User acc = udao.verify(user, pass);
 
         if (acc.getId() != -1) {
-            session.setAttribute("login", acc);
+            session.setAttribute("account", acc); // Follow account
             session.setAttribute("loginSuccess", "Login Successful!");
-
-            if (remember != null) {
+            
+            if (remember != null) { // Nếu có check remember thì tạo thêm cookie password
                 Cookie usernameCookie = new Cookie("COOKIE_USERNAME", acc.getUsername());
-                Cookie passwordCookie = new Cookie("COOKIE_PASSWORD", pass);
-
-                usernameCookie.setMaxAge(60 * 60 * 24); // Set 1 day (60 * 60 * 24)
-                passwordCookie.setMaxAge(60 * 60 * 24); // Set 1 day
-
+                usernameCookie.setMaxAge(60 * 60 * 24); // 1 ngày
                 response.addCookie(usernameCookie);
+            
+                Cookie passwordCookie = new Cookie("COOKIE_PASSWORD", pass);
+                passwordCookie.setMaxAge(60 * 60 * 24); // 1 ngày
+                response.addCookie(passwordCookie);
+            } else { // Nếu không check remember thì xóa cookie password
+                Cookie usernameCookie = new Cookie("COOKIE_USERNAME", "");
+                usernameCookie.setMaxAge(0); // 1 ngày
+                response.addCookie(usernameCookie);
+            
+                Cookie passwordCookie = new Cookie("COOKIE_PASSWORD", "");
+                passwordCookie.setMaxAge(0); // Xóa ngay lập tức
                 response.addCookie(passwordCookie);
             }
 
@@ -44,7 +51,7 @@
 
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        
+
         <link rel="stylesheet" href="./css/stylelogin.css">
         <link rel="icon" type="image/png" href="images/favicon_io/favicon.ico">
     </head>
@@ -54,18 +61,14 @@
             String usernameCookieSaved = "";
             String passwordCookieSaved = "";
 
-            // Load all cookie from Browser
             Cookie[] cookieListFromBrowser = request.getCookies();
-
             if (cookieListFromBrowser != null) {
                 for (Cookie cookie : cookieListFromBrowser) {
                     if (cookie.getName().equalsIgnoreCase("COOKIE_USERNAME")) {
                         usernameCookieSaved = cookie.getValue();
                     }
-
                     if (cookie.getName().equalsIgnoreCase("COOKIE_PASSWORD")) {
                         passwordCookieSaved = cookie.getValue();
-
                     }
                 }
             }
@@ -83,12 +86,13 @@
 
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" value="<%= passwordCookieSaved%>" placeholder="Enter your password" required>
+                        <input type="password" class="form-control" id="password" name="password" value="<%= (passwordCookieSaved.isEmpty() ? "" : passwordCookieSaved)%>" placeholder="Enter your password" required>
                     </div>
 
                     <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="remember" name="remember">
-                        <label class="form-check-label" for="remember">Remember Me</label>
+                        <input type="checkbox" class="form-check-input" id="remember" name="remember"
+                               <%= passwordCookieSaved.isEmpty() ? "" : "checked"%> >
+                        <label class="form-check-label" for="remember">Remember</label>
                     </div>
 
                     <button type="submit" class="btn btn-login">Log in</button>
