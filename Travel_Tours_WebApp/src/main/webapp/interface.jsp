@@ -12,7 +12,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     User loggedUser = (User) session.getAttribute("account");
-    
+
     Cookie[] cookies = request.getCookies();
     String username = null;
 
@@ -43,19 +43,18 @@
     </head>
     <body>
         <div class="wrapper" onclick="void(0);">
-            <!-- this is header  -->
-            <!-- <header class="c-header home-page" id="header"> -->
-            <header class="c-header type_breadcrumb  " id="header">
+            <!-- Đây là phần header -->
+            <header class="c-header type_breadcrumb" id="header">
                 <div class="c-header__left">
                     <div class="c-header__logo">
-                        <a ><img class="pc-only" src="images/home/1.png" alt="logo" loading="lazy">
+                        <a><img class="pc-only" src="images/home/1.png" alt="logo" loading="lazy">
                             <img class="sp-only" src="images/home/4.png" alt="logo" loading="lazy">
                         </a>
                     </div>
                     <div class="c-header__search input-search 1">
                         <form method="GET" action="">
                             <div class="c-header__search__autocomplete autocomplete">
-                                <input id="search-bar" type="text" name="term" placeholder="Where are you going?">
+                                <input id="search-bar" type="text" name="term" placeholder="Bạn muốn đi đâu?">
                             </div>
                             <div id="search-barautocomplete-list" class="autocomplete-items" style="display: none">
                                 <div id="search-barautocomplete-list-sub"></div>
@@ -70,48 +69,46 @@
                         <nav class="navigation">
                             <div class="navigation__head">
                                 <div class="navigation__home">
-                                    <a >HOME</a>
+                                    <a>TRANG CHỦ</a>
                                 </div>
                                 <div btn-close-menu="" class="navigation__closebtn">
-                                    <img src="images/home/icon_close_black.svg" alt="close-icon" loading="lazy">
+                                    <img src="images/home/icon_close_black.svg" alt="Đóng menu" loading="lazy">
                                 </div>
                             </div>
 
                             <ul class="navigation__menumain">
                                 <li class="navigation__menumain__item">
                                     <a class="navigation__menumain__item__destinations" data-btn-drop-down=""><span
-                                            class="pc-only">Our</span>
-                                        Destinations
-                                        <img src="images/home/arrow-right.svg" alt="arrow-right" loading="lazy">
+                                            class="pc-only">Điểm đến của chúng tôi</span>
+                                        <img src="images/home/arrow-right.svg" alt="mũi tên phải" loading="lazy">
                                     </a>
-
                                 </li>
                                 <li class="navigation__menumain__item">
-                                    <a>Why We’re Different</a>
+                                    <a>Tại sao chúng tôi khác biệt?</a>
                                 </li>
                                 <li class="navigation__menumain__item">
-                                    <a class="" >About Us</a>
+                                    <a class="">Về Chúng Tôi</a>
                                 </li>
                                 <li class="navigation__menumain__item">
-                                    <a class="" >Support</a>
+                                    <a class="">Hỗ trợ</a>
                                 </li>
                             </ul>
                         </nav>
                     </div>
                     <div class="c-header__group">
                         <% if (loggedUser != null) {%>
-                        <!-- Nếu user đã đăng nhập -->
+                        <!-- Nếu người dùng đã đăng nhập -->
                         <div class="c-header__user-menu">
                             <div class="c-header__user-toggle" data-slide-toggle="">
                                 <div class="c-header__user-icon">
-                                    <img src="images/home/user-icon.svg" alt="User Icon">
+                                    <img src="images/home/user-icon.svg" alt="Tài khoản">
                                     <span><%= loggedUser.getUsername()%></span>
                                 </div>
-                                <img src="images/home/arrow-down-white.svg" alt="Expand menu" class="c-header__user-arrow">
+                                <img src="images/home/arrow-down-white.svg" alt="Mở menu" class="c-header__user-arrow">
                             </div>
                             <div class="c-header__dropdown">
-                                <a href="user-info.jsp" class="c-header__dropdown-item">Information</a>
-                                <a href="logout.jsp" class="c-header__dropdown-item">Logout</a>
+                                <a href="user-info.jsp" class="c-header__dropdown-item">Thông tin cá nhân</a>
+                                <a href="logout.jsp" class="c-header__dropdown-item">Đăng xuất</a>
                             </div>
                         </div>
                         <% } else { %>
@@ -126,28 +123,25 @@
                                         <path d="M20 19.4C18.3 17.5 15.8 16.3 13 16.3C10.2 16.3 7.7 17.5 6 19.4" stroke="black" stroke-width="2"></path>
                                         </svg>
                                     </div>
-                                    <img src="images/home/arrow-down-white.svg" alt="Expand menu" class="c-header__user-arrow">
+                                    <img src="images/home/arrow-down-white.svg" alt="Mở menu" class="c-header__user-arrow">
                                 </div>
                                 <div class="c-header__dropdown">
-                                    <a href="login.jsp" class="c-header__dropdown-item">Login</a>
-                                    <a href="signup.jsp" class="c-header__dropdown-item">Sign Up</a>
+                                    <a href="login.jsp" class="c-header__dropdown-item">Đăng nhập</a>
+                                    <a href="signup.jsp" class="c-header__dropdown-item">Đăng ký</a>
                                 </div>
                             </div>
                         </div>
                         <% } %>
-                        <!-- if user not login show these -->
                         <a href="https://zalo.me/g/wgyzda401" target="_blank" class="c-header__contact">
-                            <p>Got a question? Text us on Zalo</p>
+                            <p>Có câu hỏi? Liên hệ chúng tôi trên Zalo</p>
                             <p>
                                 <img src="images/home/whatsapp.svg" alt="whatsapp" loading="lazy">0384 123 254
                             </p>
                         </a>
                     </div>
                 </div>
-
             </header>
             <main class="destination">
-
                 <section class="tour_in_KV">
                     <picture class="tour_in_KV__bg lazyload">
                         <source type="image/png" media="(min-width: 769px)" srcset="images/home/3.jpg">
@@ -155,18 +149,18 @@
                         <img src="images/home/bali.webp" alt="banner">
                     </picture>
                     <div class="tour_in_KV__brush">
-                        <img src="images/home/brush-stroke.svg" alt="brush-stroke">
+                        <img src="images/home/brush-stroke.svg" alt="Nét vẽ trang trí">
                     </div>
                     <div class="tour_in_KV__main">
                         <div class="c-container">
-                            <h1 class="c-title04">Tours around Vietnam</h1>
-                            <p class="c-text03">Here are all the Tours we are currently offering across Vietnam</p>
+                            <h1 class="c-title04">Tour du lịch tại Việt Nam</h1>
+                            <p class="c-text03">Dưới đây là các Tour chúng tôi đang cung cấp trên khắp Việt Nam</p>
                             <a id="seeAllToursBtn" href="#tourSection" class="c-btn01">
-                                See All Our Tours
+                                Xem Tất Cả Các Tour
                                 <img src="images/home/Icon-Plane.svg" alt="ic-plane">
                             </a>
 
-                            <p class="c-text01">Over 20,000 Reviews</p>
+                            <p class="c-text01">Hơn 20,000 đánh giá</p>
                             <div class="tour_in_KV__gr">
                                 <dl>
                                     <dt>
@@ -180,7 +174,7 @@
                                             <img src="images/home/icon-rounded.svg" alt="rounded">
                                             <img src="images/home/icon-rounded.svg" alt="rounded">
                                         </div>
-                                        <p>As recommended by 99% of users on Facebook</p>
+                                        <p>Được 99% người dùng trên Facebook khuyến nghị</p>
                                     </dd>
                                 </dl>
                                 <dl>
@@ -195,13 +189,14 @@
                                             <img src="images/home/icon-star.svg" alt="star">
                                             <img src="images/home/icon-star.svg" alt="star">
                                         </div>
-                                        <p>As recommended by 99% of users on Google reviews</p>
+                                        <p>Được 99% người dùng trên Google đánh giá tốt</p>
                                     </dd>
                                 </dl>
                             </div>
                         </div>
                     </div>
                 </section>
+            </main>
         </div>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
