@@ -14,7 +14,11 @@ public class Tour {
     private String _descrip;
     private double price;
     private String _destina;
-    private int _available;
+    private String intro;
+    private String url_video;
+    private String intr_place;
+    private String p1;
+    private String p2;
 
     /**
      * Default constructor initializes attributes with default values.
@@ -25,28 +29,29 @@ public class Tour {
         this._descrip = "";
         this.price = 0.0;
         this._destina = "";
-        this._available = -1;
+        this.intro = "";
+        this.url_video = "";
     }
 
-    /**
-     * Parameterized constructor initializes attributes with given values.
-     *
-     * @param _id Unique identifier of the tour.
-     * @param _name Name of the tour.
-     * @param _descrip Description of the tour.
-     * @param price Price of the tour.
-     * @param _destina Destination of the tour.
-     * @param _available Number of available slots.
-     */
-    public Tour(int _id, String _name, String _descrip, double price, String _destina, int _available) {
+    public Tour(int _id, String _name, String _descrip, double price, String _destina, String intro, String url_video, String intr_place, String p1, String p2) {
         this._id = _id;
         this._name = _name;
         this._descrip = _descrip;
         this.price = price;
         this._destina = _destina;
-        this._available = _available;
+        this.intro = intro;
+        this.url_video = url_video;
+        this.intr_place = intr_place;
+        this.p1 = p1;
+        this.p2 = p2;
     }
 
+
+
+
+
+
+    
     /**
      * Gets the tour ID.
      *
@@ -137,22 +142,45 @@ public class Tour {
         this._destina = _destina;
     }
 
-    /**
-     * Gets the number of available slots for the tour.
-     *
-     * @return The number of available slots.
-     */
-    public int getAvailable() {
-        return _available;
+
+    public String getIntro() {
+        return intro;
     }
 
-    /**
-     * Sets the number of available slots for the tour.
-     *
-     * @param _available The number of available slots to be assigned.
-     */
-    public void setAvailable(int _available) {
-        this._available = _available;
+    public void setIntro(String intro) {
+        this.intro = intro;
+    }
+
+    public String getUrl_video() {
+        return url_video;
+    }
+
+    public void setUrl_video(String url_video) {
+        this.url_video = url_video;
+    }
+
+    public String getIntr_place() {
+        return intr_place;
+    }
+
+    public void setIntr_place(String intr_place) {
+        this.intr_place = intr_place;
+    }
+
+    public String getP1() {
+        return p1;
+    }
+
+    public void setP1(String p1) {
+        this.p1 = p1;
+    }
+
+    public String getP2() {
+        return p2;
+    }
+
+    public void setP2(String p2) {
+        this.p2 = p2;
     }
 
     /**
@@ -162,7 +190,7 @@ public class Tour {
      */
     @Override
     public String toString() {
-        return "Tour{" + "_id=" + _id + ", _name=" + _name + ", _descrip=" + _descrip + ", price=" + price + ", _destina=" + _destina + ", _available=" + _available + '}';
+        return "Tour{" + "_id=" + _id + ", _name=" + _name + ", _descrip=" + _descrip + ", price=" + price + ", _destina=" + _destina  + '}';
     }
 
 }
