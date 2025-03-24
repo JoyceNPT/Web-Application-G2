@@ -15,30 +15,26 @@
 
         if (acc.getId() != -1) {
             session.setAttribute("account", acc); // Follow account
-            session.setAttribute("loginSuccess", "Login Successful!");
+            session.setAttribute("loginSuccess", "Chào Mừng Bạn Trở Lại!");
             
-            if (remember != null) { // Nếu có check remember thì tạo thêm cookie password
+            if (remember != null) { // If you have check remember, create a cookie password.
                 Cookie usernameCookie = new Cookie("COOKIE_USERNAME", acc.getUsername());
-                usernameCookie.setMaxAge(60 * 60 * 24); // 1 ngày
+                usernameCookie.setMaxAge(60 * 60 * 24); // 1 day
                 response.addCookie(usernameCookie);
             
                 Cookie passwordCookie = new Cookie("COOKIE_PASSWORD", pass);
-                passwordCookie.setMaxAge(60 * 60 * 24); // 1 ngày
+                passwordCookie.setMaxAge(60 * 60 * 24); // 1 day
                 response.addCookie(passwordCookie);
-            } else { // Nếu không check remember thì xóa cookie password
-                Cookie usernameCookie = new Cookie("COOKIE_USERNAME", "");
-                usernameCookie.setMaxAge(0); // 1 ngày
-                response.addCookie(usernameCookie);
-            
+            } else { // If you don't check remember then delete cookie password
                 Cookie passwordCookie = new Cookie("COOKIE_PASSWORD", "");
-                passwordCookie.setMaxAge(0); // Xóa ngay lập tức
+                passwordCookie.setMaxAge(0); // Delete immediately
                 response.addCookie(passwordCookie);
             }
 
-            response.sendRedirect("redirect.jsp"); // Chuyển hướng sang trang trung gian
+            response.sendRedirect("redirect.jsp"); // Redirect to intermediate page
         } else {
-            session.setAttribute("loginError", "Invalid username or password!");
-            response.sendRedirect("redirect.jsp"); // Chuyển hướng sang trang trung gian
+            session.setAttribute("loginError", "Đã xảy ra sai xót rồi!");
+            response.sendRedirect("redirect.jsp"); // Redirect to intermediate page
         }
     }
 %>
@@ -47,7 +43,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Travel Web Application | Login</title>
+        <title>Trang Đăng Nhập</title>
 
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -58,6 +54,7 @@
     <body>
 
         <%
+            // Retrieve information if user has memory
             String usernameCookieSaved = "";
             String passwordCookieSaved = "";
 
@@ -76,29 +73,29 @@
 
         <div class="container d-flex justify-content-center align-items-center vh-100">
             <div class="login-container">
-                <h2 class="login-title text-center">Log in to your Account</h2>
+                <h2 class="login-title text-center">Đăng Nhập Vào Tài Khoản</h2>
 
                 <form method="POST">
                     <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="username" name="username" value="<%= usernameCookieSaved%>" placeholder="Enter your username" required>
+                        <label for="username" class="form-label">Tên đăng nhập</label>
+                        <input type="text" class="form-control" id="username" name="username" value="<%= usernameCookieSaved%>" placeholder="Vui lòng nhập tên đăng nhập" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" value="<%= (passwordCookieSaved.isEmpty() ? "" : passwordCookieSaved)%>" placeholder="Enter your password" required>
+                        <label for="password" class="form-label">Mật khẩu</label>
+                        <input type="password" class="form-control" id="password" name="password" value="<%= (passwordCookieSaved.isEmpty() ? "" : passwordCookieSaved)%>" placeholder="Vui lòng nhập mật khẩu" required>
                     </div>
 
                     <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-input" id="remember" name="remember"
                                <%= passwordCookieSaved.isEmpty() ? "" : "checked"%> >
-                        <label class="form-check-label" for="remember">Remember</label>
+                        <label class="form-check-label" for="remember">Ghi nhớ?</label>
                     </div>
 
-                    <button type="submit" class="btn btn-login">Log in</button>
+                    <button type="submit" class="btn btn-login">Đăng Nhập</button>
 
                     <p class="text-center mt-3">
-                        Don’t have an account? <a href="signup.jsp" class="sign-up">Sign up</a>
+                        Bạn chưa có tài khoản? <a href="signup.jsp" class="sign-up">Đăng Ký</a>
                     </p>
                 </form>
             </div>
