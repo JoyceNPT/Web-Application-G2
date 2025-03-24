@@ -16,38 +16,38 @@
     boolean isSuccess = false;
 
     UserDAO udao = new UserDAO();
-    
+
     if (request.getMethod().equalsIgnoreCase("POST")) {
-        String nameRegex = "^[\\p{Lu}][\\p{Ll}]*$";
-        
-        if (firstName == null || !firstName.matches(nameRegex)) {
-            firstNameError = "First Name must start with a capital letter and contain only letters.";
-            hasError = true;
-        }
+//        String nameRegex = "^[\\p{Lu}][\\p{Ll}]*$"; // Regular expressions support all letters in Unicode
+//
+//        if (firstName == null || !firstName.matches(nameRegex)) {
+//            firstNameError = "Tên phải bắt đầu bằng chữ in hoa và chỉ chứa các chữ cái.";
+//            hasError = true;
+//        }
+//
+//        if (lastName == null || !firstName.matches(nameRegex)) {
+//            lastNameError = "Họ phải bắt đầu bằng chữ in hoa và chỉ chứa các chữ cái.";
+//            hasError = true;
+//        }
+//
+//        if (phone == null || phone.length() < 10 || !phone.matches("^0[1-9](?=.*[1-9].*[1-9].*[1-9])[0-9]{8}$")) {
+//            phoneError = "Số điện thoại phải có ít nhất 10 chữ số và chỉ chứa số.";
+//            hasError = true;
+//        }
+//
+//        if (!hasError) {
+        String fullname = firstName + " " + lastName;
 
-        if (lastName == null || !firstName.matches(nameRegex)) {
-            lastNameError = "Last Name must start with a capital letter and contain only letters.";
-            hasError = true;
-        }
+        int create = udao.insertUser(fullname, email, phone, username, password);
 
-        if (phone == null || phone.length() < 10 || !phone.matches("^0[1-9](?=.*[1-9].*[1-9].*[1-9])[0-9]{8}$")) {
-            phoneError = "Phone must be at least 10 digits and contain only numbers.";
-            hasError = true;
+        if (create > 0) {
+            session.setAttribute("signupSuccess", "Chào Mừng Thành Viên Mới");
+            response.sendRedirect("redirect.jsp");
+        } else {
+            session.setAttribute("signupError", "Đã Trùng Hoặc Sai Thông Tin");
+            response.sendRedirect("redirect.jsp");
         }
-
-        if (!hasError) {
-            String fullname = firstName + " " + lastName;
-            
-            int create = udao.insertUser(fullname, email, phone, username, password);
-
-            if (create > 0) {
-                session.setAttribute("signupSuccess", "Sign Up Successful!");
-                response.sendRedirect("redirect.jsp");
-            } else {
-                session.setAttribute("signupError", "Sign Up Failed. Please try again!");
-                response.sendRedirect("redirect.jsp");
-            }
-        }
+//        }
     }
 %>
 
@@ -55,7 +55,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Travel Web Application | Sign Up</title>
+        <title>Trang Đăng Ký</title>
 
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="./css/stylesignup.css">
@@ -64,54 +64,59 @@
     <body>
         <div class="container d-flex justify-content-center align-items-center vh-100">
             <div class="login-container">
-                <h2 class="login-title text-center">Sign Up for your Account</h2>
+                <h2 class="login-title text-center">Đăng Ký Tài Khoản</h2>
 
                 <form method="POST">
                     <div class="row mb-3">
                         <div class="col">
-                            <label for="firstName" class="form-label">First Name</label>
-                            <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Enter first name" required>
-                            <% if (firstNameError != null) { %>
-                            <div class="text-danger"><%= firstNameError %></div>
-                            <% } %>
+                            <label for="firstName" class="form-label">Tên thật</label>
+                            <input type="text" class="form-control" id="firstName" name="firstName"
+                                   placeholder="Vui lòng nhập tên thật" required 
+                                   pattern="^[\p{Lu}][\p{Ll}]*$"
+                                   title="Tên phải bắt đầu bằng chữ in hoa và chỉ chứa chữ cái."
+                                   oninvalid="this.setCustomValidity('Tên phải bắt đầu bằng chữ in hoa và chỉ chứa chữ cái.')"
+                                   oninput="this.setCustomValidity('')">
                         </div>
 
                         <div class="col">
-                            <label for="lastName" class="form-label">Last Name</label>
-                            <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Enter last name" required>
-                            <% if (lastNameError != null) { %>
-                            <div class="text-danger"><%= lastNameError %></div>
-                            <% } %>
+                            <label for="lastName" class="form-label">Họ thật</label>
+                            <input type="text" class="form-control" id="lastName" name="lastName"
+                                   placeholder="Vui lòng nhập họ thật" required 
+                                   pattern="^[\p{Lu}][\p{Ll}]*$"
+                                   title="Họ phải bắt đầu bằng chữ in hoa và chỉ chứa các chữ cái."
+                                   oninvalid="this.setCustomValidity('Họ phải bắt đầu bằng chữ in hoa và chỉ chứa các chữ cái.')"
+                                   oninput="this.setCustomValidity('')">
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
+                        <label for="username" class="form-label">Tên đăng nhập</label>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Vui lòng nhập tên đăng nhập" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                        <label for="password" class="form-label">Mật khẩu</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Vui lòng nhập mật khẩu" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+                        <label for="email" class="form-label">Hộp thư điện tử (@gmail.com)</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Vui lòng nhập hộp thư điện tử" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="phone" class="form-label">Phone</label>
-                        <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter your phone number" required>
-                        <% if (phoneError != null) {%>
-                        <div class="text-danger"><%= phoneError%></div>
-                        <% }%>
+                        <label class="form-label">Số điện thoại (+84)</label>
+                        <input type="text" class="form-control" name="phone" placeholder="Vui lòng nhập số điện thoại" required" 
+                               required pattern="^0[1-9](?=.*[1-9].*[1-9].*[1-9])[0-9]{8}$"
+                               title="Số điện thoại phải có ít nhất 10 chữ số và chỉ chứa số."
+                               oninvalid="this.setCustomValidity('Số điện thoại phải có ít nhất 10 chữ số và chỉ chứa số.')"
+                               oninput="this.setCustomValidity('')">
                     </div>
 
-                    <button type="submit" class="btn btn-warning w-100 text-black">Sign Up</button>
+                    <button type="submit" class="btn btn-warning w-100 text-black">Đăng Ký</button>
 
                     <p class="text-center mt-3">
-                        Already have an account? <a href="login.jsp" class="sign-up">Log in</a>
+                        Bạn đã có tài khoản? <a href="login.jsp" class="sign-up">Đăng Nhập</a>
                     </p>
                 </form>
             </div>
