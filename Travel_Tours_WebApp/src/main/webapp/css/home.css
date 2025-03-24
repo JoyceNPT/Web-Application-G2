@@ -315,6 +315,9 @@ a { text-decoration: none; color: #000; }
     text-align: left;
     margin-bottom: 10px;
 }
+.tour_in_KV__gr__star img {
+    margin-right: 5px;
+}
 
 /* Typography & Buttons */
 .c-title04 {
