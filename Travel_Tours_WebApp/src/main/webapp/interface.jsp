@@ -215,33 +215,30 @@
                 });
             });
         </script>
-        <!-- Danh sách tour -->
-
         <section id="tourSection" class="tour-list">
             <div class="tours-grid">
-                <%
-                    for (Tour t : list) {
+                <% for (Tour t : list) {
+                        List<Image> images = dao.getImagesByTourId(t.getId());
+                        String imageUrl = "images/tours/default.jpg"; // Ảnh mặc định
+                        if (images != null && !images.isEmpty()) {
+                            imageUrl = images.get(0).getUrl_img(); // Lấy ảnh đầu tiên nếu có
+                        }
                 %>
-                <!-- Tour Card -->
                 <div class="tour-card">
                     <div class="tour-image">
-                        <!-- Nếu có getImage() thì lấy từ database, nếu không thì tự động lấy theo ID -->
-                        <img src="images/tours/<%= t.getId()%>.jpg" alt="<%= t.getName()%>">
-
+                        <img src="<%= imageUrl%>" alt="<%= t.getName()%>">
                     </div>
                     <div class="tour-info">
                         <div class="tour-title"><%= t.getName()%></div>
                         <div class="tour-description"><%= t.getDescrip()%></div>
                         <div class="tour-price"><%= t.getPrice()%></div>
                         <div class="tour-buttons">
-                            <a href="tourdetails.jsp?id=<%= t.getId()%>" class="btn btn-details">Xem chi tiết</a>
-                           
+                            <a href="tourdetail.jsp?id=<%= t.getId()%>" class="btn btn-details">Xem chi tiết</a>
+                            <a href="booking?id=<%= t.getId()%>" class="btn btn-booking">Đặt tour</a>
                         </div>
                     </div>
                 </div>
-                <%
-                    }
-                %>
+                <% }%>
             </div>
         </section>
 
