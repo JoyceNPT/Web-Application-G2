@@ -6,8 +6,12 @@ package dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Booking;
 import model.Tour;
 import util.DBContext;
@@ -17,15 +21,15 @@ import util.DBContext;
  * @author ngoth
  */
 public class BookingDAO extends DBContext {
-    
-     public BookingDAO() {
+
+    public BookingDAO() {
         super();
     }
-      public List<Booking> getAllBookings() {
+
+    public List<Booking> getAllBookings() {
         List<Booking> list = new ArrayList<>();
         String sql = "SELECT * FROM Bookings";
-        try (PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try ( PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 list.add(new Booking(
                         rs.getInt("booking_id"),
@@ -42,74 +46,42 @@ public class BookingDAO extends DBContext {
         }
         return list;
     }
-       public boolean addBooking(Booking booking) {
-    String sql = "INSERT INTO Bookings (booking_date, num_people, total_price, status, user_id, tour_id) VALUES (GETDATE(), ?, ?, ?, ?, ?)";
-    try (PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setInt(1, booking.getNumPeople());
-        ps.setDouble(2, booking.getTotal());
-        ps.setInt(3, (booking.getStatus() >= 1 && booking.getStatus() <= 3) ? booking.getStatus() : 1); // Chỉ cho phép 1,2,3
-        ps.setInt(4, booking.getUserId());
-        ps.setInt(5, booking.getTourId());
-        
-        // Kiểm tra user_id và tour_id tồn tại hay không
-        if (!isUserExists(booking.getUserId()) || !isTourExists(booking.getTourId())) {
-            System.out.println("User ID hoặc Tour ID không tồn tại!");
-            return false;
-        }
 
-        return ps.executeUpdate() > 0;
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return false;
-}
+    public int insertBookings(Timestamp date, int num_people, double price, int user_id, int tour_id) {
+        try {
+            String sqlMaxId = "select max(booking_id) as maxid from Bookings";
+            PreparedStatement psGetMaxId = conn.prepareStatement(sqlMaxId);
+            ResultSet rsMaxId = psGetMaxId.executeQuery();
+            if (rsMaxId.next()) {
+                int nextId = rsMaxId.getInt("maxid") + 1;
+                String sql = "insert into Bookings(booking_id,booking_date, num_people, total_price, user_id, tour_id) values( ?, ?, ?, ?, ?, ?)";
+                try {
+                    PreparedStatement ps = conn.prepareStatement(sql);
+                    ps.setInt(1, nextId);
+                    ps.setTimestamp(2, date);
+                    ps.setInt(3, num_people);
+                    ps.setDouble(4, price);
+                    ps.setInt(5, user_id);
+                    ps.setInt(6, tour_id);
+                    int num = ps.executeUpdate();
+                    if (num > 0) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+                return 0;
+            }
 
-// Hàm kiểm tra user có tồn tại không
-private boolean isUserExists(int userId) {
-    String sql = "SELECT user_id FROM Users WHERE user_id = ?";
-    try (PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setInt(1, userId);
-        ResultSet rs = ps.executeQuery();
-        return rs.next();
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return false;
-}
-
-// Hàm kiểm tra tour có tồn tại không
-private boolean isTourExists(int tourId) {
-    String sql = "SELECT tour_id FROM Tours WHERE tour_id = ?";
-    try (PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setInt(1, tourId);
-        ResultSet rs = ps.executeQuery();
-        return rs.next();
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return false;
-}
-
-        
-          public boolean updateBookingStatus(int bookingId, int status) {
-        String sql = "UPDATE Bookings SET status = ? WHERE booking_id = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, status);
-            ps.setInt(2, bookingId);
-            return ps.executeUpdate() > 0;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
-        return false;
+        return 0;
     }
-           public boolean deleteBooking(int bookingId) {
-        String sql = "DELETE FROM Bookings WHERE booking_id = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, bookingId);
-            return ps.executeUpdate() > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
+
+    public static void main(String[] args) {
+        BookingDAO dao = new BookingDAO();
     }
 }
