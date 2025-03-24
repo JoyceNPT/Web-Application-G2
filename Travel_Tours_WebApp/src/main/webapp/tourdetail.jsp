@@ -23,6 +23,14 @@
                 username = c.getValue();
             }
         }
+    } else {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+
+    if (username == null) {
+        response.sendRedirect("login.jsp");
+        return;
     }
 
     TourDAO dao = new TourDAO();
@@ -69,103 +77,103 @@
     </head>
     <body>
         <!-- Đây là phần header -->
-            <header class="c-header type_breadcrumb" id="header">
-                <div class="c-header__left">
-                    <div class="c-header__logo">
-                        <a><img class="pc-only" src="images/home/1.png" alt="logo" loading="lazy">
-                            <img class="sp-only" src="images/home/4.png" alt="logo" loading="lazy">
-                        </a>
-                    </div>
-                    <div class="c-header__search input-search 1">
-                        <form method="GET" action="">
-                            <div class="c-header__search__autocomplete autocomplete">
-                                <input id="search-bar" type="text" name="term" placeholder="Bạn muốn đi đâu?">
-                            </div>
-                            <div id="search-barautocomplete-list" class="autocomplete-items" style="display: none">
-                                <div id="search-barautocomplete-list-sub"></div>
-                                <div id="search-for-all"></div>
-                            </div>
-                            <button class="c-header__search__submit" type="submit"></button>
-                        </form>
-                    </div>
+        <header class="c-header type_breadcrumb" id="header">
+            <div class="c-header__left">
+                <div class="c-header__logo">
+                    <a><img class="pc-only" src="images/home/1.png" alt="logo" loading="lazy">
+                        <img class="sp-only" src="images/home/4.png" alt="logo" loading="lazy">
+                    </a>
                 </div>
-                <div class="c-header__right" data-navigation="">
-                    <div class="c-header__block">
-                        <nav class="navigation">
-                            <div class="navigation__head">
-                                <div class="navigation__home">
-                                    <a>TRANG CHỦ</a>
-                                </div>
-                                <div btn-close-menu="" class="navigation__closebtn">
-                                    <img src="images/home/icon_close_black.svg" alt="Đóng menu" loading="lazy">
-                                </div>
+                <div class="c-header__search input-search 1">
+                    <form method="GET" action="">
+                        <div class="c-header__search__autocomplete autocomplete">
+                            <input id="search-bar" type="text" name="term" placeholder="Bạn muốn đi đâu?">
+                        </div>
+                        <div id="search-barautocomplete-list" class="autocomplete-items" style="display: none">
+                            <div id="search-barautocomplete-list-sub"></div>
+                            <div id="search-for-all"></div>
+                        </div>
+                        <button class="c-header__search__submit" type="submit"></button>
+                    </form>
+                </div>
+            </div>
+            <div class="c-header__right" data-navigation="">
+                <div class="c-header__block">
+                    <nav class="navigation">
+                        <div class="navigation__head">
+                            <div class="navigation__home">
+                                <a>TRANG CHỦ</a>
                             </div>
+                            <div btn-close-menu="" class="navigation__closebtn">
+                                <img src="images/home/icon_close_black.svg" alt="Đóng menu" loading="lazy">
+                            </div>
+                        </div>
 
-                            <ul class="navigation__menumain">
-                                <li class="navigation__menumain__item">
-                                    <a class="navigation__menumain__item__destinations" data-btn-drop-down=""><span
-                                            class="pc-only">Điểm đến của chúng tôi</span>
-                                        <img src="images/home/arrow-right.svg" alt="mũi tên phải" loading="lazy">
-                                    </a>
-                                </li>
-                                <li class="navigation__menumain__item">
-                                    <a>Tại sao chúng tôi khác biệt?</a>
-                                </li>
-                                <li class="navigation__menumain__item">
-                                    <a class="">Về Chúng Tôi</a>
-                                </li>
-                                <li class="navigation__menumain__item">
-                                    <a class="">Hỗ trợ</a>
-                                </li>
-                            </ul>
-                        </nav>
+                        <ul class="navigation__menumain">
+                            <li class="navigation__menumain__item">
+                                <a class="navigation__menumain__item__destinations" data-btn-drop-down=""><span
+                                        class="pc-only">Điểm đến của chúng tôi</span>
+                                    <img src="images/home/arrow-right.svg" alt="mũi tên phải" loading="lazy">
+                                </a>
+                            </li>
+                            <li class="navigation__menumain__item">
+                                <a>Tại sao chúng tôi khác biệt?</a>
+                            </li>
+                            <li class="navigation__menumain__item">
+                                <a class="">Về Chúng Tôi</a>
+                            </li>
+                            <li class="navigation__menumain__item">
+                                <a class="">Hỗ trợ</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="c-header__group">
+                    <% if (loggedUser != null) {%>
+                    <!-- Nếu người dùng đã đăng nhập -->
+                    <div class="c-header__user-menu">
+                        <div class="c-header__user-toggle" data-slide-toggle="">
+                            <div class="c-header__user-icon">
+                                <img src="images/home/user-icon.svg" alt="Tài khoản">
+                                <span><%= loggedUser.getUsername()%></span>
+                            </div>
+                            <img src="images/home/arrow-down-white.svg" alt="Mở menu" class="c-header__user-arrow">
+                        </div>
+                        <div class="c-header__dropdown">
+                            <a href="user-info.jsp" class="c-header__dropdown-item">Thông tin cá nhân</a>
+                            <a href="logout.jsp" class="c-header__dropdown-item">Đăng xuất</a>
+                        </div>
                     </div>
-                    <div class="c-header__group">
-                        <% if (loggedUser != null) {%>
-                        <!-- Nếu người dùng đã đăng nhập -->
+                    <% } else { %>
+                    <!-- Nếu chưa đăng nhập -->
+                    <div class="c-header__user-not-login pc-only">
                         <div class="c-header__user-menu">
                             <div class="c-header__user-toggle" data-slide-toggle="">
                                 <div class="c-header__user-icon">
-                                    <img src="images/home/user-icon.svg" alt="Tài khoản">
-                                    <span><%= loggedUser.getUsername()%></span>
+                                    <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+                                    <rect width="26" height="26" rx="13" fill="white"></rect>
+                                    <circle cx="13" cy="11.7" r="3.7" stroke="black" stroke-width="2"></circle>
+                                    <path d="M20 19.4C18.3 17.5 15.8 16.3 13 16.3C10.2 16.3 7.7 17.5 6 19.4" stroke="black" stroke-width="2"></path>
+                                    </svg>
                                 </div>
                                 <img src="images/home/arrow-down-white.svg" alt="Mở menu" class="c-header__user-arrow">
                             </div>
                             <div class="c-header__dropdown">
-                                <a href="user-info.jsp" class="c-header__dropdown-item">Thông tin cá nhân</a>
-                                <a href="logout.jsp" class="c-header__dropdown-item">Đăng xuất</a>
+                                <a href="login.jsp" class="c-header__dropdown-item">Đăng nhập</a>
+                                <a href="signup.jsp" class="c-header__dropdown-item">Đăng ký</a>
                             </div>
                         </div>
-                        <% } else { %>
-                        <!-- Nếu chưa đăng nhập -->
-                        <div class="c-header__user-not-login pc-only">
-                            <div class="c-header__user-menu">
-                                <div class="c-header__user-toggle" data-slide-toggle="">
-                                    <div class="c-header__user-icon">
-                                        <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
-                                        <rect width="26" height="26" rx="13" fill="white"></rect>
-                                        <circle cx="13" cy="11.7" r="3.7" stroke="black" stroke-width="2"></circle>
-                                        <path d="M20 19.4C18.3 17.5 15.8 16.3 13 16.3C10.2 16.3 7.7 17.5 6 19.4" stroke="black" stroke-width="2"></path>
-                                        </svg>
-                                    </div>
-                                    <img src="images/home/arrow-down-white.svg" alt="Mở menu" class="c-header__user-arrow">
-                                </div>
-                                <div class="c-header__dropdown">
-                                    <a href="login.jsp" class="c-header__dropdown-item">Đăng nhập</a>
-                                    <a href="signup.jsp" class="c-header__dropdown-item">Đăng ký</a>
-                                </div>
-                            </div>
-                        </div>
-                        <% } %>
-                        <a href="https://zalo.me/g/wgyzda401" target="_blank" class="c-header__contact">
-                            <p>Có câu hỏi? Liên hệ chúng tôi trên Zalo</p>
-                            <p>
-                                <img src="images/home/whatsapp.svg" alt="whatsapp" loading="lazy">0384 123 254
-                            </p>
-                        </a>
                     </div>
+                    <% }%>
+                    <a href="https://zalo.me/g/wgyzda401" target="_blank" class="c-header__contact">
+                        <p>Có câu hỏi? Liên hệ chúng tôi trên Zalo</p>
+                        <p>
+                            <img src="images/home/whatsapp.svg" alt="whatsapp" loading="lazy">0384 123 254
+                        </p>
+                    </a>
                 </div>
-            </header>
+            </div>
+        </header>
 
         <div class="c-container" style="padding-top: 75px">
             <ul class="breadcumbs" style="display: flex; padding-left: 10%;padding-top: 10px; font-weight: 500;">
@@ -198,7 +206,7 @@
                         <%
                             }
                             if (totalImages > maxDisplay) { // Nếu còn ảnh chưa hiển thị
-%>
+                        %>
                         <div class="col-6 position-relative">
                             <img src="<%= images.get(maxDisplay).getUrl_img()%>" alt="" class="img-fluid rounded">
                             <div class="overlay d-flex align-items-center justify-content-center">
