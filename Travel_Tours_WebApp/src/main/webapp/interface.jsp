@@ -101,7 +101,11 @@
                         <div class="c-header__user-menu">
                             <div class="c-header__user-toggle" data-slide-toggle="">
                                 <div class="c-header__user-icon">
-                                    <img src="images/home/user-icon.svg" alt="Tài khoản">
+                                    <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+                                        <rect width="26" height="26" rx="13" fill="white"></rect>
+                                        <circle cx="13" cy="11.7" r="3.7" stroke="black" stroke-width="2"></circle>
+                                        <path d="M20 19.4C18.3 17.5 15.8 16.3 13 16.3C10.2 16.3 7.7 17.5 6 19.4" stroke="black" stroke-width="2"></path>
+                                        </svg>
                                     <span><%= loggedUser.getUsername()%></span>
                                 </div>
                                 <img src="images/home/arrow-down-white.svg" alt="Mở menu" class="c-header__user-arrow">
