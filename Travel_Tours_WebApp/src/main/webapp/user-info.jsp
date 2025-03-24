@@ -21,17 +21,26 @@
         String action = request.getParameter("action");
 
         if (action.equalsIgnoreCase("update")) {
-            String fullname = request.getParameter("name");
+            String firstName = request.getParameter("firstName");
+            String lastName = request.getParameter("lastName");
             String email = request.getParameter("email");
             String phone = request.getParameter("phone");
 
             boolean hasError = false;
-            String fullnameError = "";
+            String firstNameError = null;
+            String lastNameError = null;
             String phoneError = "";
 
             // Kiểm tra tên
-            if (fullname == null || !fullname.matches("^[a-zA-Z]+(\\s[a-zA-Z]+)*$")) {
-                fullnameError = "Full Name can only contain letters and spaces.";
+            String nameRegex = "^[\\p{Lu}][\\p{Ll}]*$";
+
+            if (firstName == null || !firstName.matches(nameRegex)) {
+                firstNameError = "First Name must start with a capital letter and contain only letters.";
+                hasError = true;
+            }
+
+            if (lastName == null || !firstName.matches(nameRegex)) {
+                lastNameError = "Last Name must start with a capital letter and contain only letters.";
                 hasError = true;
             }
 
@@ -42,6 +51,8 @@
             }
 
             if (!hasError) {
+                String fullname = firstName + " " + lastName;
+
                 acc.setFullname(fullname);
                 acc.setEmail(email);
                 acc.setPhone(phone);
@@ -155,9 +166,22 @@
                             <div class="modal-body">
                                 <input type="hidden" name="id" value="<%= acc.getId()%>">
 
-                                <div class="mb-3">
-                                    <label class="form-label">Full Name</label>
-                                    <input type="text" class="form-control" name="name" value="<%= acc.getFullname()%>" required/>
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <label for="firstName" class="form-label">First Name</label>
+                                        <input type="text" class="form-control" id="firstName" name="firstName"
+                                               placeholder="Enter first name" required 
+                                               pattern="^[\p{Lu}][\p{Ll}]*$"
+                                               title="First Name must start with a capital letter and contain only letters.">
+                                    </div>
+
+                                    <div class="col">
+                                        <label for="lastName" class="form-label">Last Name</label>
+                                        <input type="text" class="form-control" id="lastName" name="lastName"
+                                               placeholder="Enter last name" required 
+                                               pattern="^[\p{Lu}][\p{Ll}]*$"
+                                               title="Last Name must start with a capital letter and contain only letters.">
+                                    </div>
                                 </div>
 
                                 <div class="mb-3">
@@ -167,7 +191,9 @@
 
                                 <div class="mb-3">
                                     <label class="form-label">Phone</label>
-                                    <input type="text" class="form-control" name="phone" value="<%= acc.getPhone()%>" required/>
+                                    <input type="text" class="form-control" name="phone" value="<%= acc.getPhone()%>" 
+                                           required pattern="^0[1-9](?=.*[1-9].*[1-9].*[1-9])[0-9]{8}$"
+                                           title="Phone must be at least 10 digits and contain only numbers.">
                                 </div>
                             </div>
                             <div class="modal-footer">
