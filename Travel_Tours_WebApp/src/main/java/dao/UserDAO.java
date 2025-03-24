@@ -5,6 +5,7 @@
 package dao;
 
 import java.security.MessageDigest;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import model.User;
@@ -102,14 +103,89 @@ public class UserDAO extends DBContext {
         return acc;
     }
 
-    // public static void main(String[] args) {
-    //     UserDAO dao = new UserDAO();
-    //     User account = new User();
-    //     account = dao.verify("admin", "admin");
+    public User getByUser(String username) {
+        String sql = "SELECT * FROM Users WHERE username = ?";
 
-    //     System.out.println(account);
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
 
-    //     String result = dao.hashMD5("admin");
-    //     System.out.println(result);
-    // }
+            if (rs.next()) {
+                int id = rs.getInt("user_id");
+                String name = rs.getString("full_name");
+                String email = rs.getString("email");
+                String phone = rs.getString("phone");
+                String password = rs.getString("password");
+                int role_id = rs.getInt("role_id");
+                Date created_at = rs.getDate("created_at");
+
+                User user = new User(id, username, password, name, email, phone, role_id, created_at);
+                return user;
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+    
+    public int update(int id, String name, String email, String phone) {
+        String sql = "UPDATE Users SET full_name = ?, email = ?, phone = ? WHERE [user_id] = ?";
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, name);
+            ps.setString(2, email);
+            ps.setString(3, phone);
+            ps.setInt(4, id);
+
+            int result = ps.executeUpdate();
+
+            if (result > 0) {
+                return 1;
+            } else {
+                return 0;
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return 0;
+    }
+
+    public int delete(int id) {
+        String sql = "DELETE FROM Users WHERE [user_id] = ?";
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+
+            int result = ps.executeUpdate();
+
+            if (result > 0) {
+                return 1;
+            } else {
+                return 0;
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return 0;
+    }
+
+    public static void main(String[] args) {
+        UserDAO dao = new UserDAO();
+        User account = new User();
+        account = dao.verify("admin", "admin");
+
+        System.out.println(account);
+
+//        String result = dao.hashMD5("admin");
+//        System.out.println(result);
+
+//        int update = dao.update(1, "Ngo Phuoc Thinh", "abc@gamil.com", "0147147147");
+//        System.out.println(update);
+        
+//        int delete = dao.delete(9);
+//        System.out.println(delete);
+    }
 }
