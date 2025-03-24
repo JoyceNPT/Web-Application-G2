@@ -23,14 +23,6 @@
                 username = c.getValue();
             }
         }
-    } else {
-        response.sendRedirect("login.jsp");
-        return;
-    }
-
-    if (username == null) {
-        response.sendRedirect("login.jsp");
-        return;
     }
 
     TourDAO dao = new TourDAO();
