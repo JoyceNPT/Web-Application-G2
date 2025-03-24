@@ -493,8 +493,11 @@
                 console.log('adultCount:', adultCount);
                 console.log('childCount:', childCount);
                 console.log('totalPrice:', totalPrice);
-                console.log('totalPrice:', `Tổng cộng ${totalPrice.toLocaleString()} VND`);
+                if (totalPrice !== 0) {
+                    console.log('totalPrice:', `Tổng cộng ${totalPrice.toLocaleString()} VND`);
+                }
                 console.log('detailPrice:', priceDetail);
+
 
 
             });
