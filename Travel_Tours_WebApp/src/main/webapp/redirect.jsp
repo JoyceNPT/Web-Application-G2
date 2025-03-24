@@ -21,8 +21,8 @@
             Swal.fire({
                 icon: 'success',
                 title: '<%= session.getAttribute("loginSuccess")%>',
-                text: 'Redirecting to your dashboard...',
-                confirmButtonText: 'OK',
+                text: 'Bạn đã đăng nhập thành công vào website chúng tôi!',
+                confirmButtonText: 'Đi thôi!!!',
                 allowOutsideClick: false,
                 customClass: {
                     confirmButton: "btn btn-login"
@@ -36,8 +36,10 @@
             <% if (session.getAttribute("loginError") != null) {%>
             Swal.fire({
                 icon: 'error',
-                title: 'Login Failed',
-                text: '<%= session.getAttribute("loginError")%>',
+                title: '<%= session.getAttribute("loginError")%>',
+                text: 'Có lẽ là sai ở tên đăng nhập hoặc mật khẩu rồi!',
+                confirmButtonText: 'Trờ về thôi!',
+                allowOutsideClick: false,
                 customClass: {
                     confirmButton: "btn btn-login"
                 }
@@ -51,8 +53,8 @@
             Swal.fire({
                 icon: 'success',
                 title: '<%= session.getAttribute("signupSuccess")%>',
-                text: 'You will be redirected to the login page.',
-                confirmButtonText: 'OK',
+                text: 'Bạn đã tạo tài khoản thành công!',
+                confirmButtonText: 'Tuyệt cà là vời',
                 allowOutsideClick: false,
                 customClass: {
                     confirmButton: "btn btn-login"
@@ -66,8 +68,10 @@
             <% if (session.getAttribute("signupError") != null) {%>
             Swal.fire({
                 icon: 'error',
-                title: 'Sign Up Failed',
-                text: '<%= session.getAttribute("signupError")%>',
+                title: '<%= session.getAttribute("signupError")%>',
+                text: 'Bạn chắc chắn tất cả thông tin là đúng chứ?',
+                confirmButtonText: 'Sai ở đâu nhỉ?',
+                allowOutsideClick: false,
                 customClass: {
                     confirmButton: "btn btn-login"
                 }
