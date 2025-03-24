@@ -23,14 +23,6 @@
                 username = c.getValue();
             }
         }
-    } else {
-        response.sendRedirect("login.jsp");
-        return;
-    }
-
-    if (username == null) {
-        response.sendRedirect("login.jsp");
-        return;
     }
 
     TourDAO dao = new TourDAO();
@@ -134,7 +126,11 @@
                     <div class="c-header__user-menu">
                         <div class="c-header__user-toggle" data-slide-toggle="">
                             <div class="c-header__user-icon">
-                                <img src="images/home/user-icon.svg" alt="Tài khoản">
+                                <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+                                <rect width="26" height="26" rx="13" fill="white"></rect>
+                                <circle cx="13" cy="11.7" r="3.7" stroke="black" stroke-width="2"></circle>
+                                <path d="M20 19.4C18.3 17.5 15.8 16.3 13 16.3C10.2 16.3 7.7 17.5 6 19.4" stroke="black" stroke-width="2"></path>
+                                </svg>
                                 <span><%= loggedUser.getUsername()%></span>
                             </div>
                             <img src="images/home/arrow-down-white.svg" alt="Mở menu" class="c-header__user-arrow">
@@ -174,7 +170,23 @@
                 </div>
             </div>
         </header>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const userMenu = document.querySelector(".c-header__user-menu");
+                const dropdown = document.querySelector(".c-header__dropdown");
 
+                userMenu.addEventListener("click", function (event) {
+                    event.stopPropagation();
+                    dropdown.classList.toggle("show");
+                });
+
+                document.addEventListener("click", function (event) {
+                    if (!userMenu.contains(event.target)) {
+                        dropdown.classList.remove("show");
+                    }
+                });
+            });
+        </script>
         <div class="c-container" style="padding-top: 75px">
             <ul class="breadcumbs" style="display: flex; padding-left: 10%;padding-top: 10px; font-weight: 500;">
                 <li><a href="interface.jsp" style="text-decoration: none; font-size: 18rem; color: #989898; ">Tours in Viet Nam</a></li>
@@ -206,7 +218,7 @@
                         <%
                             }
                             if (totalImages > maxDisplay) { // Nếu còn ảnh chưa hiển thị
-                        %>
+%>
                         <div class="col-6 position-relative">
                             <img src="<%= images.get(maxDisplay).getUrl_img()%>" alt="" class="img-fluid rounded">
                             <div class="overlay d-flex align-items-center justify-content-center">
@@ -281,7 +293,7 @@
                         <article class="tour-detail-page__block">
                             <form data-form-add-cart id="tourmaster-enquiry-formss" method="post" class="tour-options" action="action">
                                 <div class="tour-options-header">
-                                    <h2 class="tour-options__title">Select Dates And Participants</h2>
+                                    <h2 class="tour-options__title">Chọn ngày và số lượng người</h2>
                                     <div class="tour-options__selection">
                                         <div class="tour-options__selection-wrap" id="picker-container">
                                             <input  name="tourist_date" id="myID" class="tour-options__date" value="D/M/YYYY" readonly>
@@ -296,16 +308,16 @@
                                 </div>
                                 <div class="tour-options__content " data-tour-options-content="">
                                     <div class="tour-card">
-                                        <h2 class="tour-header">Private & All-Inclusive Tour</h2>
+                                        <h2 class="tour-header">Tour cá nhân và ăn uống</h2>
                                         <div class="tour-price">
-                                            <span class="price-detail">2 Adults x US$119</span>
+                                            <span class="price-detail"></span>
                                             <span class="price-total"></span>
                                         </div>
                                         <p class="price-note">(Price includes taxes and booking fees)</p>
 
                                         <!-- Lựa chọn thời gian -->
                                         <div class="time-selection">
-                                            <label for="start-time">Select a starting time</label>
+                                            <label for="start-time">Chọn thời gian khởi hành</label>
                                             <div class="time-options">
                                                 <input type="text" id="start-time" name="start-time" value="<%= hour.get(0).getHour()%> AM" readonly/>
                                                 <input type="text" id="start-time" name="start-time" value="<%= hour.get(1).getHour()%> AM" readonly/>
@@ -313,7 +325,7 @@
                                         </div>
 
                                         <div class="duration">
-                                            <p><strong>Duration:</strong> 13 hours</p>
+                                            <p><strong>Duration:</strong> 2 ngày</p>
                                         </div>
 
                                         <a href="#" class="more-info">See what is included</a>
@@ -371,6 +383,12 @@
         <!-- jQuery và Bootstrap Datepicker -->
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
         <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/vn.js"></script>
+
+        <script>
+            var adultPrice = <%= t.getPrice()%>; // Giá người lớn
+            var childPrice = <%= child_price%>; // Giá trẻ em (70% của giá người lớn)
+        </script>
+
         <script>
             // Thiết lập giá trị mặc định là 0 khi mở modal
             document.getElementById("tourist_guests").addEventListener("click", function () {
@@ -435,8 +453,8 @@
                 let childCount = parseInt(document.getElementById('child-count').textContent);
 
                 // Lấy giá cho người lớn và trẻ em từ server (ví dụ: từ t.getPrice() và child_price)
-                let adultPrice = 1200000;  // Giá cho 1 người lớn là 1.200.000 VND
-                let childPrice = 840000;   // Giá cho 1 trẻ em là 840.000 VND
+                let adultPrice = window.adultPrice;
+                let childPrice = window.childPrice;
 
                 // Tính tổng giá
                 let totalAdultPrice = adultCount * adultPrice;
@@ -469,6 +487,14 @@
 
                 // Đóng modal (overlay)
                 document.querySelector('.overlay').style.display = 'none';
+
+                console.log('adultPrice:', adultPrice);
+                console.log('childPrice:', childPrice);
+                console.log('adultCount:', adultCount);
+                console.log('childCount:', childCount);
+                console.log('totalPrice:', totalPrice);
+                console.log('totalPrice:', `Tổng cộng ${totalPrice.toLocaleString()} VND`);
+                console.log('detailPrice:', priceDetail);
 
 
             });
