@@ -3,6 +3,8 @@
     Created on : Mar 13, 2025, 2:34:03 PM
     Author     : PC
 --%>
+<%@page import="java.sql.Timestamp"%>
+<%@page import="dao.BookingDAO"%>
 <%@page import="model.User"%>
 <%@page import="model.Hours"%>
 <%@page import="model.Place"%>
@@ -24,7 +26,7 @@
             }
         }
     }
-
+    BookingDAO bdao = new BookingDAO();
     TourDAO dao = new TourDAO();
     String idRaw = request.getParameter("id");
     int tour_id = 0;
@@ -218,7 +220,7 @@
                         <%
                             }
                             if (totalImages > maxDisplay) { // Nếu còn ảnh chưa hiển thị
-%>
+                        %>
                         <div class="col-6 position-relative">
                             <img src="<%= images.get(maxDisplay).getUrl_img()%>" alt="" class="img-fluid rounded">
                             <div class="overlay d-flex align-items-center justify-content-center">
@@ -291,7 +293,7 @@
                     </div>
                     <div class="tour-detail-right">
                         <article class="tour-detail-page__block">
-                            <form data-form-add-cart id="tourmaster-enquiry-formss" method="post" class="tour-options" action="action">
+                            <form data-form-add-cart id="tourmaster-enquiry-formss" method="post" action="tourdetail.jsp?id=<%= t.getId()%>" class="tour-options" >
                                 <div class="tour-options-header">
                                     <h2 class="tour-options__title">Chọn ngày và số lượng người</h2>
                                     <div class="tour-options__selection">
@@ -306,21 +308,26 @@
 
                                     </div>
                                 </div>
+
                                 <div class="tour-options__content " data-tour-options-content="">
                                     <div class="tour-card">
                                         <h2 class="tour-header">Tour cá nhân và ăn uống</h2>
                                         <div class="tour-price">
-                                            <span class="price-detail"></span>
-                                            <span class="price-total"></span>
+                                            <span class="price-detail" id="price-detail"></span>    
                                         </div>
+                                        <input type="hidden" id="totalPrice" name="totalPrice" value="">
+                                        <div class="tour-price">
+                                            <span class="price-total" id="price-total"></span>
+                                        </div>
+
                                         <p class="price-note">(Price includes taxes and booking fees)</p>
 
                                         <!-- Lựa chọn thời gian -->
                                         <div class="time-selection">
                                             <label for="start-time">Chọn thời gian khởi hành</label>
                                             <div class="time-options">
-                                                <input type="text" id="start-time" name="start-time" value="<%= hour.get(0).getHour()%> AM" readonly/>
-                                                <input type="text" id="start-time" name="start-time" value="<%= hour.get(1).getHour()%> AM" readonly/>
+                                                <input type="text" id="start-time" name="start-time" value="<%= hour.get(0).getHour()%>" readonly/>
+                                                <input type="text" id="start-time" name="start-time" value="<%= hour.get(1).getHour()%>" readonly/>
                                             </div>
                                         </div>
 
@@ -332,7 +339,7 @@
                                     </div>
                                 </div>
                                 <div class="wrap">
-                                    <button class="tour-options__add-to-cart" data-frm-add-to-cart-btn="">Add To Cart</button>
+                                    <button class="tour-options__add-to-cart" id="addToCartBtn" data-frm-add-to-cart-btn="">Add To Cart</button>
                                 </div>
                                 </div>
 
@@ -340,15 +347,63 @@
                         </article>
                     </div>
                 </div>
-
             </div>
-
         </section>
-        <!-- Bảng chọn số khách -->
         <%
             double child_price = t.getPrice() * 0.7;
+            if (request.getMethod().equals("POST")) {
+                int user_id = loggedUser.getId();
+                String totalPrice = request.getParameter("totalPrice");
+                String hours = request.getParameter("start-time");
+                String date = request.getParameter("tourist_date");
+                String guest = request.getParameter("tourist_guests");
+
+                boolean isValid = true; // Biến để kiểm tra xem tất cả các giá trị có hợp lệ không
+
+                // Kiểm tra xem các giá trị có null hoặc rỗng không
+                if (totalPrice == null || totalPrice.isEmpty()) {
+                    isValid = false;
+                }
+                if (hours == null || hours.isEmpty()) {
+                    isValid = false;
+                }
+                if (date == null || date.isEmpty()) {
+                    isValid = false;
+                }
+                if (guest == null || guest.isEmpty()) {
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    // In giá trị các tham số nhận được từ form
+                    out.println("<p>Total Price: " + totalPrice + "</p>");
+                    out.println("<p>Hours: " + hours + "</p>");
+                    out.println("<p>Date: " + date + "</p>");
+                    out.println("<p>Guests: " + guest + "</p>");
+                    String dateTimeString = date + " " + hours;
+                    out.println("<p>DateTime String: " + dateTimeString + "</p>");
+                    Timestamp timestamp = Timestamp.valueOf(dateTimeString + ":00");
+                    out.println("<p>Timestamp: " + timestamp + "</p>");
+
+                    // In giá trị user_id và tour_id
+                    out.println("<p>User ID: " + user_id + "</p>");
+                    out.println("<p>Tour ID: " + tour_id + "</p>");
+                    double price = Double.parseDouble(totalPrice);
+                    int people = Integer.parseInt(guest);
+                    int num = bdao.insertBookings(timestamp, people, price, user_id, tour_id);
+                    if (num > 0) {
+                        response.sendRedirect("booking.jsp");
+                    } else {
+                        response.sendRedirect("interface.jsp");
+                    }
+                    out.println("<p style='color: red;'>Please fill in all required fields.</p>");
+                }
+
+            }
 
         %>
+        <!-- Bảng chọn số khách -->
+
         <div class="overlay">
             <div class="guest-modal">
                 <div class="close-btn">×</div>
@@ -383,6 +438,7 @@
         <!-- jQuery và Bootstrap Datepicker -->
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
         <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/vn.js"></script>
+
 
         <script>
             var adultPrice = <%= t.getPrice()%>; // Giá người lớn
@@ -470,51 +526,42 @@
                 // Cập nhật thông tin số lượng và tổng giá vào tour-price
                 let priceDetail = "";
                 if (adultCount > 0) {
-                    priceDetail += `${adultCount} Người lớn x ${adultPrice.toLocaleString()} VND`;
+                    priceDetail += adultCount + ' Người lớn x ' + adultPrice.toLocaleString() + ' VND';
                 }
                 if (childCount > 0) {
                     if (priceDetail)
                         priceDetail += ", ";
-                    priceDetail += `${childCount} Trẻ em x ${childPrice.toLocaleString()} VND`;
+                    priceDetail += childCount + ' Trẻ em x ' + childPrice.toLocaleString() + ' VND';
                 }
 
                 // Cập nhật giá vào phần tử HTML
-                document.querySelector('.price-detail').textContent = priceDetail;
-                document.querySelector('.price-total').textContent = `Tổng cộng ${totalPrice.toLocaleString()} VND`;
 
                 // Cập nhật ô input với số lượng khách đã chọn
-                document.getElementById('tourist_guests').value = (adultCount + childCount) + ' khách';
-
+                document.getElementById('tourist_guests').value = (adultCount + childCount);
+                document.getElementById('totalPrice').value = totalPrice;
+                document.getElementById('price-total').textContent = 'Tổng cộng: ' + totalPrice + ' VND';
+                document.getElementById('price-detail').textContent = priceDetail;
                 // Đóng modal (overlay)
                 document.querySelector('.overlay').style.display = 'none';
-
                 console.log('adultPrice:', adultPrice);
                 console.log('childPrice:', childPrice);
                 console.log('adultCount:', adultCount);
                 console.log('childCount:', childCount);
                 console.log('totalPrice:', totalPrice);
-                if (totalPrice !== 0) {
-                    console.log('totalPrice:', `Tổng cộng ${totalPrice.toLocaleString()} VND`);
-                }
                 console.log('detailPrice:', priceDetail);
-
-
 
             });
 
 
         </script>
         <script>
-
-
             flatpickr("#myID", {
                 locale: "vn", // Chuyển sang tiếng Việt
-                dateFormat: "d/m/Y", // Định dạng ngày DD/MM/YYYY
+                dateFormat: "Y-m-d", // Định dạng ngày DD/MM/YYYY
                 minDate: "today", // Không cho chọn ngày trong quá khứ
                 enableTime: false,
             })
                     ;
-
         </script>
 
 
