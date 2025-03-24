@@ -1,23 +1,32 @@
 <%@page import="dao.UserDAO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
-    String fullname = request.getParameter("fullname");
+    String firstName = request.getParameter("firstName");
+    String lastName = request.getParameter("lastName");
     String username = request.getParameter("username");
     String password = request.getParameter("password");
     String email = request.getParameter("email");
     String phone = request.getParameter("phone");
 
-    String fullnameError = null;
+    String firstNameError = null;
+    String lastNameError = null;
     String phoneError = null;
     String signupError = null;
     boolean hasError = false;
     boolean isSuccess = false;
 
     UserDAO udao = new UserDAO();
-
+    
     if (request.getMethod().equalsIgnoreCase("POST")) {
-        if (fullname == null || !fullname.matches("^[a-zA-Z]+(\\s[a-zA-Z]+)*$")) {
-            fullnameError = "Full Name can only contain letters and spaces.";
+        String nameRegex = "^[\\p{Lu}][\\p{Ll}]*$";
+        
+        if (firstName == null || !firstName.matches(nameRegex)) {
+            firstNameError = "First Name must start with a capital letter and contain only letters.";
+            hasError = true;
+        }
+
+        if (lastName == null || !firstName.matches(nameRegex)) {
+            lastNameError = "Last Name must start with a capital letter and contain only letters.";
             hasError = true;
         }
 
@@ -27,6 +36,8 @@
         }
 
         if (!hasError) {
+            String fullname = firstName + " " + lastName;
+            
             int create = udao.insertUser(fullname, email, phone, username, password);
 
             if (create > 0) {
@@ -56,12 +67,22 @@
                 <h2 class="login-title text-center">Sign Up for your Account</h2>
 
                 <form method="POST">
-                    <div class="mb-3">
-                        <label for="fullname" class="form-label">Full Name</label>
-                        <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Enter your full name" required>
-                        <% if (fullnameError != null) {%>
-                        <div class="text-danger"><%= fullnameError%></div>
-                        <% } %>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="firstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Enter first name" required>
+                            <% if (firstNameError != null) { %>
+                            <div class="text-danger"><%= firstNameError %></div>
+                            <% } %>
+                        </div>
+
+                        <div class="col">
+                            <label for="lastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Enter last name" required>
+                            <% if (lastNameError != null) { %>
+                            <div class="text-danger"><%= lastNameError %></div>
+                            <% } %>
+                        </div>
                     </div>
 
                     <div class="mb-3">
