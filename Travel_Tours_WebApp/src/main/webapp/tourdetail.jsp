@@ -4,17 +4,14 @@
     Author     : PC
 --%>
 <%@page import="java.sql.Timestamp"%>
+<%@page import="dao.BookingDAO"%>
 <%@page import="model.User"%>
 <%@page import="model.Hours"%>
 <%@page import="model.Place"%>
 <%@page import="java.util.List"%>
 <%@page import="model.Image"%>
-<%@page import="model.Rating"%>
 <%@page import="dao.TourDAO"%>
-<%@page import="dao.RatingDAO"%>
 <%@page import="model.Tour"%>
-<%@page import="java.util.ArrayList"%>
-<%@page import="dao.BookingDAO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     User loggedUser = (User) session.getAttribute("account");
@@ -119,11 +116,13 @@
                             <li class="navigation__menumain__item">
                                 <a>Về Chúng Tôi</a>
                             </li>
-                            <li class="navigation__menumain__item">
-                                <a>Hỗ trợ</a>
-                            </li>
                         </ul>
                     </nav>
+                    <div class="c-header__cart">
+                        <a href="cart.jsp">
+                            <im class="cart-icon pc-only" src="https://cdn.forevervacation.com/layout_v_3/assets/img/tour-detail/pc/cart-white.svg" alt="alt"/>
+                        </a>
+                    </div>
                 </div>
                 <div class="c-header__group">
                     <% if (loggedUser != null) {%>
@@ -224,7 +223,7 @@
                         <%
                             }
                             if (totalImages > maxDisplay) { // Nếu còn ảnh chưa hiển thị
-%>
+                        %>
                         <div class="col-6 position-relative">
                             <img src="<%= images.get(maxDisplay).getUrl_img()%>" alt="" class="img-fluid rounded">
                             <div class="overlay d-flex align-items-center justify-content-center">
@@ -605,7 +604,7 @@
 
             });
         </script>
-
+        
         <script>
             flatpickr("#myID", {
                 locale: "vn", // Chuyển sang tiếng Việt
@@ -615,125 +614,5 @@
             })
                     ;
         </script>
-
-        <%-- Phần đánh giá --%>
-        <%
-            RatingDAO ratingDAO = new RatingDAO();
-            List<Rating> ratings = null;
-            try {
-                ratings = ratingDAO.getRatingsByTourId(tour_id);
-                if (ratings == null) {
-                    ratings = new ArrayList<>();
-                }
-            } catch (Exception e) {
-                out.println("<script>alert('Lỗi khi lấy danh sách đánh giá: " + e.getMessage() + "');</script>");
-                ratings = new ArrayList<>(); // Gán danh sách rỗng để tiếp tục render
-                System.err.println("Error in getRatingsByTourId: " + e.getMessage()); // Ghi log lỗi
-            }
-
-            // Xử lý gửi đánh giá (kiểm tra đăng nhập trước)
-            if ("POST".equalsIgnoreCase(request.getMethod()) && "1".equals(request.getParameter("submitReview"))) {
-                // Kiểm tra người dùng có đăng nhập hay không
-                if (loggedUser == null) {
-                    out.println("<script>alert('Vui lòng đăng nhập để gửi đánh giá!'); window.location.href = 'login.jsp';</script>");
-                    return;
-                }
-
-                // Nếu đã đăng nhập, xử lý gửi đánh giá
-                try {
-                    String userName = request.getParameter("userName");
-                    String ratingStr = request.getParameter("rating");
-                    String comment = request.getParameter("comment");
-
-                    // Debug: In giá trị đầu vào ra log server
-                    System.out.println("=== Submit Review Debug ===");
-                    System.out.println("tour_id: " + tour_id);
-                    System.out.println("userName: " + userName);
-                    System.out.println("ratingStr: " + ratingStr);
-                    System.out.println("comment: " + comment);
-
-                    // Kiểm tra dữ liệu đầu vào
-                    if (userName == null || userName.trim().isEmpty()) {
-                        out.println("<script>alert('Vui lòng nhập tên!');</script>");
-                    } else if (ratingStr == null || ratingStr.trim().isEmpty()) {
-                        out.println("<script>alert('Vui lòng chọn số sao!');</script>");
-                    } else if (comment == null || comment.trim().isEmpty()) {
-                        out.println("<script>alert('Vui lòng nhập bình luận!');</script>");
-                    } else {
-                        int rating = Integer.parseInt(ratingStr);
-                        if (rating < 1 || rating > 5) {
-                            out.println("<script>alert('Số sao không hợp lệ!');</script>");
-                        } else {
-                            int newRatingId = ratingDAO.addRating(tour_id, userName.trim(), rating, comment.trim());
-                            System.out.println("New Rating ID: " + newRatingId); // Debug kết quả insert
-                            if (newRatingId > 0) {
-                                out.println("<script>alert('Đánh giá đã được gửi thành công!'); window.location.href = 'tourdetail.jsp?id=" + tour_id + "';</script>");
-                                return;
-                            } else {
-                                out.println("<script>alert('Lỗi: Không thể thêm đánh giá vào cơ sở dữ liệu!');</script>");
-                            }
-                        }
-                    }
-                } catch (NumberFormatException e) {
-                    out.println("<script>alert('Số sao không hợp lệ: " + e.getMessage() + "');</script>");
-                } catch (Exception e) {
-                    out.println("<script>alert('Lỗi khi gửi đánh giá: " + e.getMessage() + "');</script>");
-                    System.err.println("Error in submit review: " + e.getMessage()); // Ghi log lỗi
-                }
-            }
-        %>
-        <h2 class="review-title">Đánh giá Tour</h2>
-
-        <!-- Form nhập đánh giá (luôn hiển thị) -->
-        <form class="review-form" method="post" action="tourdetail.jsp?id=<%= tour_id%>">
-            <input type="hidden" name="submitReview" value="1">
-            <label>Nhập tên:</label>
-            <input type="text" name="userName" required placeholder="Nhập tên của bạn" maxlength="255">
-            <label>Chọn số sao:</label>
-            <select name="rating" required>
-                <option value="5">★★★★★ - Tuyệt vời</option>
-                <option value="4">★★★★☆ - Tốt</option>
-                <option value="3">★★★☆☆ - Bình thường</option>
-                <option value="2">★★☆☆☆ - Kém</option>
-                <option value="1">★☆☆☆☆ - Rất tệ</option>
-            </select>
-            <label>Nhập bình luận:</label>
-            <textarea name="comment" rows="4" required placeholder="Nhập đánh giá của bạn tại đây..." maxlength="500"></textarea>
-            <button type="submit">Gửi đánh giá</button>
-        </form>
-
-        <!-- Hiển thị danh sách đánh giá -->
-        <div class="review-list">
-            <h3>Danh sách đánh giá:</h3>
-            <ul>
-                <%
-                    if (ratings.isEmpty()) {
-                        out.println("<li class=\"review-item\">Chưa có đánh giá nào cho tour này.</li>");
-                    } else {
-                        for (Rating r : ratings) {
-                            if (r != null) {
-                                StringBuilder stars = new StringBuilder();
-                                for (int i = 0; i < r.getRating(); i++) {
-                                    stars.append("★");
-                                }
-                                for (int i = r.getRating(); i < 5; i++) {
-                                    stars.append("☆");
-                                }
-                %>
-                <li class="review-item">
-                    <strong><%= r.getUserName() != null ? r.getUserName() : "Ẩn danh"%></strong> - 
-                    <%= stars.toString()%> (<%= r.getRating()%>/5) - 
-                    <%= r.getCreatedAt() != null ? r.getCreatedAt() : "Không rõ ngày"%><br>
-                    <%= r.getComment() != null ? r.getComment() : "Không có bình luận"%>
-                </li>
-                <%
-                            }
-                        }
-                    }
-                %>
-            </ul>
-        </div>
-
-
     </body>
 </html>
