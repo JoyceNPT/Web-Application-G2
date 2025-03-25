@@ -15,7 +15,6 @@ public class Booking {
     private Date _date;
     private int _numPeople;
     private double _total;
-    private int _status;
     private int _userId;
     private int _tourId;
 
@@ -27,7 +26,6 @@ public class Booking {
         this._date = _date;
         this._numPeople = -1;
         this._total = 0.0;
-        this._status = -1;
         this._userId = -1;
         this._tourId = -1;
     }
@@ -43,12 +41,11 @@ public class Booking {
      * @param _userId ID of the user who made the booking.
      * @param _tourId ID of the tour associated with the booking.
      */
-    public Booking(int _id, Date _date, int _numPeople, double _total, int _status, int _userId, int _tourId) {
+    public Booking(int _id, Date _date, int _numPeople, double _total, int _userId, int _tourId) {
         this._id = _id;
         this._date = _date;
         this._numPeople = _numPeople;
         this._total = _total;
-        this._status = _status;
         this._userId = _userId;
         this._tourId = _tourId;
     }
@@ -125,23 +122,6 @@ public class Booking {
         this._total = _total;
     }
 
-    /**
-     * Gets the status of the booking.
-     *
-     * @return The current status of the booking.
-     */
-    public int getStatus() {
-        return _status;
-    }
-
-    /**
-     * Sets the status of the booking.
-     *
-     * @param _status The status to be assigned to the booking.
-     */
-    public void setStatus(int _status) {
-        this._status = _status;
-    }
 
     /**
      * Gets the user ID associated with the booking.
@@ -186,7 +166,7 @@ public class Booking {
      */
     @Override
     public String toString() {
-        return "Booking{" + "_id=" + _id + ", _date=" + _date + ", _numPeople=" + _numPeople + ", _total=" + _total + ", _status=" + _status + ", _userId=" + _userId + ", _tourId=" + _tourId + '}';
+        return "Booking{" + "_id=" + _id + ", _date=" + _date + ", _numPeople=" + _numPeople + ", _total=" + _total + ", _userId=" + _userId + ", _tourId=" + _tourId + '}';
     }
 
 }
