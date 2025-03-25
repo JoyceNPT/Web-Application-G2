@@ -28,7 +28,14 @@
                     confirmButton: "btn btn-login"
                 }
             }).then(() => {
-                window.location.href = 'interface.jsp';
+                <% 
+                    User loggedInUser = (User)session.getAttribute("login");
+                    if (loggedInUser != null && loggedInUser.getRole() == 1) { 
+                %>
+                    window.location.href = 'admin-interface.jsp';
+                <% } else { %>
+                    window.location.href = 'interface.jsp';
+                <% } %>
             });
             <% session.removeAttribute("loginSuccess"); %>
             <% } %>
