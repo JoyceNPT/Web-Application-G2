@@ -6,12 +6,9 @@ package dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import model.Booking;
 import model.Tour;
 import util.DBContext;
@@ -21,7 +18,8 @@ import util.DBContext;
  * @author ngoth
  */
 public class BookingDAO extends DBContext {
-
+    
+    
     public BookingDAO() {
         super();
     }
@@ -33,10 +31,10 @@ public class BookingDAO extends DBContext {
             while (rs.next()) {
                 list.add(new Booking(
                         rs.getInt("booking_id"),
-                        rs.getDate("booking_date"),
+                        rs.getTimestamp("booking_date"),
                         rs.getInt("num_people"),
                         rs.getDouble("total_price"),
-                        rs.getInt("status"),
+                      
                         rs.getInt("user_id"),
                         rs.getInt("tour_id")
                 ));
@@ -46,7 +44,23 @@ public class BookingDAO extends DBContext {
         }
         return list;
     }
+public Booking getById(int id) {
+        String sql = "SELECT * FROM Bookings where booking_id =?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Booking b = new Booking(id, rs.getTimestamp("booking_date"), rs.getInt("num_people"), rs.getDouble("total_price"),rs.getInt("user_id"), rs.getInt("tour_id"));
+                return b;
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
 
+    
     public int insertBookings(Timestamp date, int num_people, double price, int user_id, int tour_id) {
         try {
             String sqlMaxId = "select max(booking_id) as maxid from Bookings";
@@ -84,4 +98,4 @@ public class BookingDAO extends DBContext {
     public static void main(String[] args) {
         BookingDAO dao = new BookingDAO();
     }
-}
+       }
