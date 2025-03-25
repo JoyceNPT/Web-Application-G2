@@ -903,3 +903,154 @@ a:not([href]):not([class]), a:not([href]):not([class]):hover {
     transition: all 0.3s ease;
     margin-top: 20px;
 }
+/* Căn chỉnh form đánh giá */
+.review-form {
+    max-width: 1000px; /* Tăng max-width để khớp với các phần tử phía trên */
+    width: 100%;
+    margin: 20px auto; /* Căn giữa form */
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Các ô nhập liệu */
+.review-form input,
+.review-form select,
+.review-form textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px; /* Kích thước chữ hợp lý */
+    box-sizing: border-box; /* Đảm bảo padding không làm tăng kích thước */
+}
+
+/* Tăng chiều cao ô nhập bình luận */
+.review-form textarea {
+    height: 120px;
+    resize: none;
+}
+
+/* Nút gửi đánh giá */
+.review-form button {
+    width: 100%;
+    padding: 14px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.review-form button:hover {
+    background: #0056b3;
+}
+
+/* Tiêu đề đánh giá */
+.review-title {
+    text-align: center;
+    font-size: 28px; /* Tăng kích thước tiêu đề */
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333; /* Màu chữ đậm hơn */
+}
+
+/* Danh sách đánh giá */
+.review-list {
+    max-width: 1000px; /* Tăng max-width để khớp với các phần tử phía trên */
+    width: 100%;
+    margin: 20px auto;
+    padding: 20px; /* Tăng padding để thoáng hơn */
+    border-radius: 8px;
+    background: #f8f9fa;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.05); /* Thêm bóng nhẹ */
+}
+
+/* Tiêu đề "Danh sách đánh giá" */
+.review-list h3 {
+    font-size: 24px; /* Tăng kích thước tiêu đề */
+    margin-bottom: 15px;
+    color: #333;
+}
+
+/* Định dạng danh sách */
+.review-list ul {
+    list-style: none; /* Bỏ dấu đầu dòng mặc định */
+    padding: 0;
+}
+
+/* Mỗi mục đánh giá */
+.review-item {
+    font-size: 16px; /* Kích thước chữ */
+    line-height: 1.6; /* Khoảng cách dòng */
+    padding: 15px; /* Tăng padding để thoáng hơn */
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    background: #fff; /* Nền trắng cho mỗi mục */
+    border-radius: 5px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.05); /* Thêm bóng nhẹ */
+}
+
+/* Bỏ đường viền dưới cho mục cuối cùng */
+.review-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+/* Tên người dùng (phần in đậm) */
+.review-item strong {
+    font-size: 18px; /* Tăng kích thước tên người dùng */
+    color: #333;
+}
+
+/* Khoảng cách sau dòng xuống */
+.review-item br {
+    margin-bottom: 5px;
+    display: block;
+    content: "";
+}
+
+/* Responsive cho thiết bị nhỏ */
+@media (max-width: 600px) {
+    .review-form,
+    .review-list {
+        max-width: 100%; /* Chiếm toàn bộ chiều rộng trên mobile */
+        padding: 15px;
+    }
+
+    .review-title {
+        font-size: 24px;
+    }
+
+    .review-list h3 {
+        font-size: 20px;
+    }
+    .review-list li {
+        font-size: 20px;
+    }
+
+    .review-item {
+        font-size: 14px; /* Giảm nhẹ trên mobile nhưng vẫn dễ đọc */
+    }
+
+    .review-item strong {
+        font-size: 16px;
+    }
+
+    .review-form input,
+    .review-form select,
+    .review-form textarea {
+        font-size: 14px;
+    }
+
+    .review-form button {
+        font-size: 16px;
+    }
+}
+
