@@ -1,0 +1,493 @@
+<%-- 
+    Document   : tourdetail
+    Created on : Mar 13, 2025, 2:34:03 PM
+    Author     : PC
+--%>
+<%@page import="model.Hours"%>
+<%@page import="model.Place"%>
+<%@page import="java.util.List"%>
+<%@page import="model.Image"%>
+<%@page import="dao.TourDAO"%>
+<%@page import="model.Tour"%>
+<%@page import="java.util.ArrayList"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    TourDAO dao = new TourDAO();
+    String idRaw = request.getParameter("id");
+    int tour_id = 0;
+    Tour t = null;
+    List<Image> images = null;
+    List<Place> place = null;
+    List<Hours> hour = null;
+    String imageUrl = request.getParameter("imageUrl");
+    if (imageUrl == null || imageUrl.isEmpty()) {
+        imageUrl = "images/tours/default.jpg"; // Ảnh mặc định nếu không có
+    }
+    try {
+        tour_id = Integer.parseInt(idRaw);
+        t = dao.getById(tour_id);
+        if (t == null) {
+            response.sendRedirect("interface.jsp"); // Chuyển hướng nếu ID không tồn tại
+            return;
+        }
+        images = dao.getImagesByTourId(tour_id);
+        if (images != null && !images.isEmpty()) {
+            imageUrl = images.get(0).getUrl_img(); // Lấy ảnh đầu tiên nếu có
+        }
+        place = dao.getPlaceByTourId(tour_id);
+        hour = dao.getHoursByTourId(tour_id);
+    } catch (Exception e) {
+        response.sendRedirect("interface.jsp");
+    }
+
+    // Handle Add to Cart
+    if ("POST".equalsIgnoreCase(request.getMethod()) && "addToCart".equals(request.getParameter("action"))) {
+        List<Object[]> cart = (List<Object[]>) session.getAttribute("cart");
+        if (cart == null) {
+            cart = new ArrayList<>();
+        }
+
+        // Lấy các tham số từ form
+        String adultCountStr = request.getParameter("adultCount");
+        String childCountStr = request.getParameter("childCount");
+        String selectedDate = request.getParameter("tourist_date");
+        String startTime = request.getParameter("start-time");
+
+        // Debug: In giá trị ra log server
+        System.out.println("=== Add to Cart Debug ===");
+        System.out.println("adultCountStr: " + adultCountStr);
+        System.out.println("childCountStr: " + childCountStr);
+        System.out.println("selectedDate: " + selectedDate);
+        System.out.println("startTime: " + startTime);
+
+        // Kiểm tra các tham số
+        if (adultCountStr != null && !adultCountStr.trim().isEmpty() && 
+            childCountStr != null && !childCountStr.trim().isEmpty() && 
+            selectedDate != null && !selectedDate.trim().isEmpty() && !selectedDate.equals("D/M/YYYY") && 
+            startTime != null && !startTime.trim().isEmpty()) {
+            try {
+                int adultCount = Integer.parseInt(adultCountStr);
+                int childCount = Integer.parseInt(childCountStr);
+                if (adultCount + childCount > 0) {
+                    double totalPrice = adultCount * t.getPrice() + childCount * (t.getPrice() * 0.7);
+                    cart.add(new Object[]{t, adultCount, childCount, totalPrice, selectedDate, startTime, false});
+                    session.setAttribute("cart", cart);
+                    System.out.println("Cart updated. Size: " + cart.size());
+                    response.sendRedirect("tourdetail.jsp?id=" + tour_id); // Tải lại trang
+                    return; // Thoát khỏi JSP sau khi redirect
+                } else {
+                    out.println("<script>alert('Vui lòng chọn ít nhất một khách!');</script>");
+                }
+            } catch (NumberFormatException e) {
+                out.println("<script>alert('Số lượng khách không hợp lệ!');</script>");
+            }
+        } else {
+            StringBuilder errorMsg = new StringBuilder("Vui lòng kiểm tra lại: ");
+            if (adultCountStr == null || adultCountStr.trim().isEmpty()) errorMsg.append("Chưa chọn số người lớn. ");
+            if (childCountStr == null || childCountStr.trim().isEmpty()) errorMsg.append("Chưa chọn số trẻ em. ");
+            if (selectedDate == null || selectedDate.trim().isEmpty() || selectedDate.equals("D/M/YYYY")) errorMsg.append("Chưa chọn ngày đi. ");
+            if (startTime == null || startTime.trim().isEmpty()) errorMsg.append("Chưa chọn giờ bắt đầu.");
+            out.println("<script>alert('" + errorMsg.toString() + "');</script>");
+        }
+    }
+%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+        <link rel="stylesheet" href="./css/tourdetail.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </head>
+    <body>
+        <header class="c-header type_breadcrumb" id="header">
+            <div class="c-header__left">
+                <div class="c-header__logo">
+                    <a><img class="pc-only" src="images/home/1.png" alt="logo" loading="lazy"></a>
+                </div>
+                <div class="c-header__search input-search 1">
+                    <form method="GET" action="">
+                        <div class="c-header__search__autocomplete autocomplete">
+                            <input id="search-bar" type="text" name="term" placeholder="Where are you going?">
+                        </div>
+                        <div id="search-barautocomplete-list" class="autocomplete-items" style="display: none">
+                            <div id="search-barautocomplete-list-sub"></div>
+                            <div id="search-for-all"></div>
+                        </div>
+                        <button class="c-header__search__submit" type="submit"></button>
+                    </form>
+                </div>
+            </div>
+            <div class="c-header__right" data-navigation="">
+                <div class="c-header__block">
+                    <nav class="navigation">
+                        <div class="navigation__head">
+                            <div class="navigation__home">
+                                <a>HOME</a>
+                            </div>
+                        </div>
+                        <ul class="navigation__menumain">
+                            <li class="navigation__menumain__item">
+                                <a class="navigation__menumain__item__destinations" data-btn-drop-down=""><span class="pc-only">Our</span>
+                                    Destinations
+                                    <img src="images/home/arrow-right.svg" alt="arrow-right" loading="lazy">
+                                </a>
+                            </li>
+                            <li class="navigation__menumain__item">
+                                <a>Why We’re Different</a>
+                            </li>
+                            <li class="navigation__menumain__item">
+                                <a class="">About Us</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="c-header__group">
+                    <div class="c-header__user-not-login pc-only">
+                        <div class="c-header__user-menu">
+                            <div class="c-header__user-toggle" data-slide-toggle="">
+                                <div class="c-header__user-icon">
+                                    <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect width="26" height="26" rx="13" fill="white"></rect>
+                                        <circle cx="13.0007" cy="11.6667" r="3.66667" stroke="black" stroke-width="2" stroke-linecap="round"></circle>
+                                        <path d="M20 19.4451C18.3386 17.5455 15.8197 16.334 13 16.334C10.1803 16.334 7.66143 17.5455 6 19.4451" stroke="black" stroke-width="2" stroke-linecap="round"></path>
+                                    </svg>
+                                </div>
+                                <img src="images/home/arrow-down-white.svg" alt="Expand menu" class="c-header__user-arrow">
+                            </div>
+                            <div class="c-header__dropdown">
+                                <a href="login.jsp" class="c-header__dropdown-item">Login</a>
+                                <a href="signup.jsp" class="c-header__dropdown-item">Sign Up</a>
+                            </div>
+                        </div>
+                    </div>
+                    <% 
+                        List<Object[]> cart = (List<Object[]>) session.getAttribute("cart");
+                        int cartSize = (cart != null && !cart.isEmpty()) ? cart.size() : 0;
+                    %>
+                    <!-- Sửa: Thêm giỏ hàng vào div c-header__group, thay thế vị trí của Support -->
+                    <div class="c-header__cart" style="display: inline-flex; align-items: center; margin-left: 20px; color: white; text-decoration: none;">
+                        <a href="cart.jsp" style="display: inline-flex; align-items: center; color: white; text-decoration: none;">
+                            <!-- Sửa: Sử dụng icon SVG cho giỏ hàng -->
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 5px;">
+                                <path d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.707 15.293C4.077 15.923 4.523 17 5.414 17H17M17 17C16.469 17 16 17.469 16 18C16 18.531 16.469 19 17 19C17.531 19 18 18.531 18 18C18 17.469 17.531 17 17 17ZM5.414 17C4.883 17 4.414 17.469 4.414 18C4.414 18.531 4.883 19 5.414 19C5.945 19 6.414 18.531 6.414 18C6.414 17.469 5.945 17 5.414 17Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <!-- Sửa: Thêm class cart-count để hiển thị số lượng trên giỏ hàng -->
+                            <span class="cart-count" style="background-color: red; color: white; border-radius: 50%; padding: 2px 6px; margin-left: 5px; display: inline-block;"><%= cartSize %></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="c-container" style="padding-top: 75px">
+            <ul class="breadcumbs" style="display: flex; padding-left: 10%;padding-top: 10px; font-weight: 500;">
+                <li><a href="interface.jsp" style="text-decoration: none; font-size: 18rem; color: #989898;">Tours in Viet Nam</a></li>
+                <li style="font-size: 18rem; color: #989898; margin: 0 5px; list-style: none;">></li>
+                <li style="color: #989898; font-size: 18rem; line-height: 18rem; display: inline; margin-top: 3px; text-decoration: underline">
+                    <span><%= t.getName() %></span>
+                </li>
+            </ul>
+
+            <h1 style="margin: 10px 0 10px 0;padding-left: 10%;"><%= t.getName() %></h1>
+            <div class="group row" style="margin-left: 10%;margin-right:10%">
+                <div class="group_left col-md-6">
+                    <img src="<%= imageUrl %>" alt="alt" class="img-fluid rounded w-100">
+                </div>
+                <div class="group_right col-md-6">
+                    <div class="row g-2">
+                        <%
+                            if (images != null && images.size() > 1) {
+                                int totalImages = images.size();
+                                int maxDisplay = 5;
+                                for (int i = 1; i < Math.min(maxDisplay, totalImages); i++) {
+                        %>
+                        <div class="col-6">
+                            <img src="<%= images.get(i).getUrl_img() %>" alt="" class="img-fluid rounded">
+                        </div>
+                        <%
+                            }
+                            if (totalImages > maxDisplay) {
+                        %>
+                        <div class="col-6 position-relative">
+                            <img src="<%= images.get(maxDisplay).getUrl_img() %>" alt="" class="img-fluid rounded">
+                            <div class="overlay d-flex align-items-center justify-content-center">
+                                <span class="fw-bold text-white">+<%= totalImages - maxDisplay %></span>
+                            </div>
+                        </div>
+                        <%
+                                }
+                            }
+                        %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section class="tour-detail">
+            <div class="tour-container">
+                <div class="tour-detail-page__inner">
+                    <div class="tour-detail-left">
+                        <article class="tour-detail-page__block">
+                            <h2 class="tour-detail-title">Tour Detail</h2>
+                            <div class="tour-detail-page__info">                                
+                                <p class="tour-detail-page__info__item">
+                                    <img class="ls-is-cached lazyloaded" data-src="https://cdn.forevervacation.com/layout_v_3/assets/img/tour-detail/pc/icon-clock.svg" src="https://cdn.forevervacation.com/layout_v_3/assets/img/tour-detail/pc/icon-star.svg" alt="alt"/>
+                                    All-inclusive
+                                </p>
+                                <p class="tour-detail-page__info__item">
+                                    <img class="ls-is-cached lazyloaded" data-src="https://cdn.forevervacation.com/layout_v_3/assets/img/tour-detail/pc/icon-clock.svg" src="https://cdn.forevervacation.com/layout_v_3/assets/img/tour-detail/pc/icon-happy-face.svg" alt="alt"/>
+                                    Public Tour
+                                </p>
+                                <p class="tour-detail-page__info__item">
+                                    <img class="ls-is-cached lazyloaded" data-src="https://cdn.forevervacation.com/layout_v_3/assets/img/tour-detail/pc/icon-clock.svg" src="https://cdn.forevervacation.com/layout_v_3/FV_new/assets/img/checkout/icon_info.svg" alt="alt"/>
+                                    Comfortable
+                                </p>
+                            </div>
+                            <div class="tour-detail-intro">
+                                <div>
+                                    <div class="tour_detail visible-ul">
+                                        <p dir="ltr"><%= t.getIntro() %></p>
+                                        <iframe class="tour_detail_video" src="<%= t.getUrl_video() %>"></iframe>
+                                        <p dir="ltr"><%= t.getIntr_place() %></p>
+                                        <% if (place != null && !place.isEmpty()) { %>  
+                                        <ul class="detail-ul">
+                                            <li><a href=""><%= place.get(0).getPlace() %></a></li>
+                                            <li><a href=""><%= place.get(1).getPlace() %></a></li>
+                                            <li><a href=""><%= place.get(2).getPlace() %></a></li>
+                                            <li><a href=""><%= place.get(3).getPlace() %></a></li>
+                                            <li><a href=""><%= place.get(4).getPlace() %></a></li>
+                                        </ul>
+                                        <% } %>     
+                                        <p dir="ltr"><%= t.getP1() %></p>
+                                        <p dir="ltr"><%= t.getP2() %></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div class="tour-detail-right">
+                        <article class="tour-detail-page__block">
+                            <form data-form-add-cart id="tourmaster-enquiry-formss" method="post" class="tour-options">
+                                <input type="hidden" name="action" value="addToCart">
+                                <input type="hidden" name="adultCount" id="adultCount" value="0">
+                                <input type="hidden" name="childCount" id="childCount" value="0">
+                                <div class="tour-options-header">
+                                    <h2 class="tour-options__title">Select Dates And Participants</h2>
+                                    <div class="tour-options__selection">
+                                        <div class="tour-options__selection-wrap" id="picker-container">
+                                            <input name="tourist_date" id="myID" class="tour-options__date" value="D/M/YYYY" readonly>
+                                            <svg id="icon-datepicker" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" width="30" height="30"><path d="M23.75 5H22.5V3.75c0-.688-.563-1.25-1.25-1.25-.688 0-1.25.563-1.25 1.25V5H10V3.75c0-.688-.563-1.25-1.25-1.25-.688 0-1.25.563-1.25 1.25V5H6.25a2.489 2.489 0 0 0-2.487 2.5L3.75 25a2.5 2.5 0 0 0 2.5 2.5h17.5c1.375 0 2.5-1.125 2.5-2.5V7.5c0-1.375-1.125-2.5-2.5-2.5zm0 18.75c0 .688-.563 1.25-1.25 1.25h-15c-.688 0-1.25-.563-1.25-1.25v-12.5h17.5v12.5zm-15-10h2.5v2.5h-2.5v-2.5zm5 0h2.5v2.5h-2.5v-2.5zm5 0h2.5v2.5h-2.5v-2.5z" fill="currentColor"></path></svg>
+                                        </div>
+                                        <div class="tour-options__selection-wrap">
+                                            <input type="text" name="tourist_guests" id="tourist_guests" placeholder="Select guests" class="tour-options__guests js-guest" value="Select" autocomplete="false" readonly data-btn-popup="select_guest">
+                                            <svg data-btn-popup="select_guest" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="30" height="30"><path opacity="0.7" d="M15.334 11.167a2.49 2.49 0 0 0 2.491-2.5 2.497 2.497 0 1 0-4.992 0c0 1.383 1.117 2.5 2.5 2.5zm-6.667 0a2.49 2.49 0 0 0 2.492-2.5 2.497 2.497 0 1 0-4.992 0c0 1.383 1.117 2.5 2.5 2.5zm0 1.666c-1.942 0-5.833.975-5.833 2.917V17c0 .458.374.833.833.833h10A.836.836 0 0 0 14.5 17v-1.25c0-1.942-3.892-2.917-5.833-2.917zm6.667 0a9.76 9.76 0 0 0-.809.042c.017.008.025.025.034.033.95.692 1.608 1.617 1.608 2.842V17c0 .292-.059.575-.15.833h4.317a.836.836 0 0 0 .833-.833v-1.25c0-1.942-3.892-2.917-5.834-2.917z" fill="#0A2342"></path></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tour-options__content" data-tour-options-content="">
+                                    <div class="tour-card">
+                                        <h2 class="tour-header">Private & All-Inclusive Tour</h2>
+                                        <div class="tour-price">
+                                            <span class="price-detail">2 Adults x US$119</span>
+                                            <span class="price-total"></span>
+                                        </div>
+                                        <p class="price-note">(Price includes taxes and booking fees)</p>
+                                        <div class="time-selection">
+                                            <label for="start-time">Select a starting time</label>
+                                            <div class="time-options">
+                                                <input type="radio" id="start-time1" name="start-time" value="<%= hour.get(0).getHour() %> AM" checked style="display:none;">
+                                                <label for="start-time1" class="time-option"><%= hour.get(0).getHour() %> AM</label>
+                                                <input type="radio" id="start-time2" name="start-time" value="<%= hour.get(1).getHour() %> AM" style="display:none;">
+                                                <label for="start-time2" class="time-option"><%= hour.get(1).getHour() %> AM</label>
+                                            </div>
+                                        </div>
+                                        <div class="duration">
+                                            <p><strong>Duration:</strong> 13 hours</p>
+                                        </div>
+                                        <a href="#" class="more-info">See what is included</a>
+                                    </div>
+                                </div>
+                                <div class="wrap">
+                                    <button type="submit" class="tour-options__add-to-cart" data-frm-add-to-cart-btn="">Add To Cart</button>
+                                </div>
+                            </form>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <% double child_price = t.getPrice() * 0.7; %>
+        <div class="overlay">
+            <div class="guest-modal">
+                <div class="close-btn">×</div>
+                <h2>Select Number Of Guests</h2>
+                <div class="guest-type">
+                    <div class="label">
+                        <strong>Người lớn</strong><br>
+                        <span><%= t.getPrice() %>vnd/người</span>
+                    </div>
+                    <div class="counter">
+                        <button class="decrease" data-type="adult"><</button>
+                        <span id="adult-count">0</span>
+                        <button class="increase" data-type="adult">></button>
+                    </div>
+                </div>
+                <div class="guest-type">
+                    <div class="label">
+                        <strong>Trẻ em</strong>
+                        <span title="Only bookable with adult">ℹ️</span><br>
+                        <span><%= child_price %>vnd/người</span>
+                    </div>
+                    <div class="counter">
+                        <button class="decrease" data-type="child"><</button>
+                        <span id="child-count">0</span>
+                        <button class="increase" data-type="child">></button>
+                    </div>
+                </div>
+                <p class="note">ⓘ Booking for a child is only possible if accompanied by one or more adults.</p>
+                <button class="confirm-btn" id="confirm-btn">Confirm</button>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/vn.js"></script>
+        <script>
+            document.getElementById("tourist_guests").addEventListener("click", function () {
+                let div = document.querySelector(".overlay");
+                div.style.display = (div.style.display === "none" || div.style.display === "") ? "flex" : "none";
+                if (document.getElementById("adult-count").textContent === "0" && document.getElementById("child-count").textContent === "0") {
+                    document.getElementById("adult-count").textContent = 0;
+                    document.getElementById("child-count").textContent = 0;
+                    document.getElementById('tourist_guests').value = "0 guests";
+                }
+            });
+
+            document.querySelector(".close-btn").addEventListener("click", function () {
+                document.querySelector(".overlay").style.display = "none";
+            });
+
+            document.querySelectorAll('.decrease, .increase').forEach(button => {
+                button.addEventListener('click', function () {
+                    const type = this.getAttribute('data-type');
+                    const countElement = document.getElementById(type + '-count');
+                    let currentCount = parseInt(countElement.textContent);
+
+                    if (this.classList.contains('decrease')) {
+                        if (type === 'child' && currentCount > 0) {
+                            currentCount--;
+                        } else if (type === 'adult' && currentCount > 0) {
+                            if (currentCount > 0 && parseInt(document.getElementById('child-count').textContent) === 0) {
+                                currentCount--;
+                            } else if (currentCount > 1 || parseInt(document.getElementById('child-count').textContent) === 0) {
+                                currentCount--;
+                            }
+                        }
+                    } else if (this.classList.contains('increase')) {
+                        if (type === 'child' && parseInt(document.getElementById('adult-count').textContent) > 0) {
+                            currentCount++;
+                        } else if (type === 'adult') {
+                            currentCount++;
+                        }
+                    }
+
+                    countElement.textContent = currentCount;
+                    let adultCount = parseInt(document.getElementById('adult-count').textContent);
+                    let childCount = parseInt(document.getElementById('child-count').textContent);
+                    let totalGuests = adultCount + childCount;
+                    document.getElementById('tourist_guests').value = totalGuests + ' guests';
+                });
+            });
+
+            document.getElementById('confirm-btn').addEventListener('click', function () {
+                let adultCount = parseInt(document.getElementById('adult-count').textContent);
+                let childCount = parseInt(document.getElementById('child-count').textContent);
+                let adultPrice = <%= t.getPrice() %>;
+                let childPrice = <%= child_price %>;
+                let totalAdultPrice = adultCount * adultPrice;
+                let totalChildPrice = childCount * childPrice;
+                let totalPrice = totalAdultPrice + totalChildPrice;
+
+                if (totalPrice === 0) {
+                    alert("Vui lòng chọn ít nhất một khách!");
+                    return;
+                }
+
+                let priceDetail = "";
+                if (adultCount > 0) {
+                    priceDetail += `${adultCount} Người lớn x ${adultPrice.toLocaleString()} VND`;
+                }
+                if (childCount > 0) {
+                    if (priceDetail) priceDetail += ", ";
+                    priceDetail += `${childCount} Trẻ em x ${childPrice.toLocaleString()} VND`;
+                }
+
+                document.querySelector('.price-detail').textContent = priceDetail;
+                document.querySelector('.price-total').textContent = `Tổng cộng ${totalPrice.toLocaleString()} VND`;
+                document.getElementById('tourist_guests').value = (adultCount + childCount) + ' khách';
+                document.querySelector('.overlay').style.display = 'none';
+
+                // Cập nhật giá trị hidden inputs trực tiếp
+                document.getElementById('adultCount').value = adultCount;
+                document.getElementById('childCount').value = childCount;
+
+                // Debug: Kiểm tra giá trị hidden inputs
+                console.log("adultCount in form: " + document.getElementById('adultCount').value);
+                console.log("childCount in form: " + document.getElementById('childCount').value);
+            });
+
+            flatpickr("#myID", {
+                locale: "vn",
+                dateFormat: "d/m/Y",
+                minDate: "today",
+                enableTime: false,
+            });
+
+            // Xử lý chọn giờ bắt đầu
+            document.querySelectorAll('.time-option').forEach(option => {
+                option.addEventListener('click', function () {
+                    document.querySelectorAll('.time-option').forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    let radio = this.previousElementSibling;
+                    radio.checked = true;
+                });
+            });
+        </script>
+        <style>
+            .time-option {
+                padding: 5px 10px;
+                border: 1px solid #ccc;
+                cursor: pointer;
+                margin-right: 10px;
+                display: inline-block;
+            }
+            .time-option.selected {
+                background-color: #007bff;
+                color: white;
+            }
+            /* Sửa: Đảm bảo giỏ hàng hiển thị đúng */
+            .c-header__cart {
+                display: inline-flex !important;
+                align-items: center;
+                color: white;
+                text-decoration: none;
+            }
+            /* Sửa: Khoảng cách giữa icon và số lượng */
+            .c-header__cart svg {
+                margin-right: 3px;
+            }
+            /* Sửa: Định dạng số lượng trên giỏ hàng */
+            .cart-count {
+                background-color: red;
+                color: white;
+                border-radius: 50%;
+                padding: 2px 6px;
+                margin-left: 3px;
+                display: inline-block !important;
+                font-size: 12px;
+                line-height: 1;
+            }
+        </style>
+    </body>
+</html>
