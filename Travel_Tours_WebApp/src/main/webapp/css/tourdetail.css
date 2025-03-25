@@ -18,16 +18,20 @@ body, button {
     box-sizing: border-box;
 }
 
-html { font-size: 0.75px; }
+html {
+    font-size: 0.75px;
+}
 
 body, table, input, textarea, select, button, h1, h2, h3, h4, h5, h6 {
     line-height: 1.1;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
-img { vertical-align: middle; max-width: 100%; height: auto; }
-
-a { text-decoration: none; color: #000; }
+img {
+    vertical-align: middle;
+    max-width: 100%;
+    height: auto;
+}
 
 /* Header Dropdown */
 .c-header__dropdown {
@@ -93,9 +97,13 @@ a { text-decoration: none; color: #000; }
     justify-content: space-between;
 }
 
-.c-header__logo { width: 50px; }
+.c-header__logo {
+    width: 50px;
+}
 
-.c-header__logo a { display: block; }
+.c-header__logo a {
+    display: block;
+}
 
 .c-header__search {
     padding-left: 30px;
@@ -152,7 +160,9 @@ a { text-decoration: none; color: #000; }
     background-color: transparent;
 }
 
-.c-header__contact { padding-left: 2vw; }
+.c-header__contact {
+    padding-left: 2vw;
+}
 
 .c-header__contact p {
     color: #fff;
@@ -206,7 +216,7 @@ a { text-decoration: none; color: #000; }
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex
-;
+        ;
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
@@ -220,7 +230,16 @@ a { text-decoration: none; color: #000; }
     cursor: pointer;
     padding: 10px;
 }
-
+.navigation__menumain__item{
+    color: white;
+}
+.navigation__menumain__item a{
+    text-decoration: none;
+    color: white;
+}
+a:not([href]):not([class]), a:not([href]):not([class]):hover {
+    text-decoration: none;
+}
 .navigation__menumain__item > a, .navigation__menumain__item > p {
     color: #fff;
     font-size: 18rem;
@@ -236,6 +255,15 @@ a { text-decoration: none; color: #000; }
 .navigation__menumain__item > p.navigation__menumain__item__destinations {
     padding: 32rem 0;
     margin: 0 50rem 0 26rem;
+}
+
+
+.background-container {
+    background-image: url('https://cdn.forevervacation.com/layout_v_3/assets/img/common/pc/map2.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding-top: 75px;
 }
 
 .c-container h1{
@@ -344,6 +372,82 @@ a { text-decoration: none; color: #000; }
     box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.3);
     border-radius: 20px;
     margin-bottom: 30px;
+}
+.tour-detail-page__block2 {
+    padding: 30px 30px 40px 30px;
+    border-radius: 20px;
+    background: #faf3d9;
+    margin-bottom: 30px;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+.tour-detail-page__block2__logo {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex
+        ;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.tour-detail-page__block2__title {
+    font-size: 30px;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 40px;
+    line-height: 40px;
+}
+.tour-detail-page__block2__list {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex
+;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-line-pack: center;
+    align-content: center;
+    gap: 20px;
+    -ms-flex-item-align: stretch;
+    -ms-grid-row-align: stretch;
+    align-self: stretch;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+.tour-detail-page__block2__item {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    padding: 10px;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    border-radius: 15px;
+    border: 2px solid #e8c143;
+    background-color: #fff;
+}
+.tour-detail-page__block2__icon {
+     height: 16px; 
+}
+.tour-detail-page__block2__text {
+    font-size: 17px;
+    font-weight: bold;
+    margin-left: 10px;
 }
 .tour-detail-title {
     font-size: 30rem;
