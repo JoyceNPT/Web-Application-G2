@@ -1,6 +1,7 @@
 package model;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  * This class is used to store data/attributes corresponding to tables in the
@@ -12,9 +13,10 @@ public class Booking {
 
     // Attributes of the Booking class
     private int _id;
-    private Date _date;
+    private Timestamp _date;
     private int _numPeople;
     private double _total;
+   
     private int _userId;
     private int _tourId;
 
@@ -26,6 +28,7 @@ public class Booking {
         this._date = _date;
         this._numPeople = -1;
         this._total = 0.0;
+        
         this._userId = -1;
         this._tourId = -1;
     }
@@ -41,7 +44,7 @@ public class Booking {
      * @param _userId ID of the user who made the booking.
      * @param _tourId ID of the tour associated with the booking.
      */
-    public Booking(int _id, Date _date, int _numPeople, double _total, int _userId, int _tourId) {
+    public Booking(int _id, Timestamp _date, int _numPeople, double _total, int _userId, int _tourId) {
         this._id = _id;
         this._date = _date;
         this._numPeople = _numPeople;
@@ -73,7 +76,7 @@ public class Booking {
      *
      * @return The date when the booking was made.
      */
-    public Date getDate() {
+    public Timestamp getDate() {    
         return _date;
     }
 
@@ -82,7 +85,7 @@ public class Booking {
      *
      * @param _date The date to be assigned to the booking.
      */
-    public void setDate(Date _date) {
+    public void setDate(Timestamp _date) {
         this._date = _date;
     }
 
@@ -122,7 +125,7 @@ public class Booking {
         this._total = _total;
     }
 
-
+    
     /**
      * Gets the user ID associated with the booking.
      *
